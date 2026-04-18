@@ -23,15 +23,15 @@ async function main() {
     }
   }
 
-  console.log(`✅ Successfully seeded ${stays.length} stays with their reviews!`);
+  console.log(`✅ Successfully seeded ${stays.length} stays!`);
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Seeding failed:', e)
-    process.exit(1)
+    console.error('❌ Seeding failed:', e);
+    process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect()
-    await pool?.end()
-  })
+    await prisma.$disconnect();
+    await pool?.end();
+  });
