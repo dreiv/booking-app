@@ -27,73 +27,97 @@ export type AggregateStay = {
 }
 
 export type StayAvgAggregateOutputType = {
-  id: number | null
+  latitude: number | null
+  longitude: number | null
   price: number | null
 }
 
 export type StaySumAggregateOutputType = {
-  id: number | null
+  latitude: number | null
+  longitude: number | null
   price: number | null
 }
 
 export type StayMinAggregateOutputType = {
-  id: number | null
+  id: string | null
   name: string | null
-  location: string | null
-  price: number | null
   description: string | null
+  location: string | null
+  latitude: number | null
+  longitude: number | null
+  price: number | null
+  createdAt: Date | null
 }
 
 export type StayMaxAggregateOutputType = {
-  id: number | null
+  id: string | null
   name: string | null
-  location: string | null
-  price: number | null
   description: string | null
+  location: string | null
+  latitude: number | null
+  longitude: number | null
+  price: number | null
+  createdAt: Date | null
 }
 
 export type StayCountAggregateOutputType = {
   id: number
   name: number
-  location: number
-  price: number
   description: number
+  location: number
+  latitude: number
+  longitude: number
+  price: number
+  images: number
+  createdAt: number
   _all: number
 }
 
 
 export type StayAvgAggregateInputType = {
-  id?: true
+  latitude?: true
+  longitude?: true
   price?: true
 }
 
 export type StaySumAggregateInputType = {
-  id?: true
+  latitude?: true
+  longitude?: true
   price?: true
 }
 
 export type StayMinAggregateInputType = {
   id?: true
   name?: true
-  location?: true
-  price?: true
   description?: true
+  location?: true
+  latitude?: true
+  longitude?: true
+  price?: true
+  createdAt?: true
 }
 
 export type StayMaxAggregateInputType = {
   id?: true
   name?: true
-  location?: true
-  price?: true
   description?: true
+  location?: true
+  latitude?: true
+  longitude?: true
+  price?: true
+  createdAt?: true
 }
 
 export type StayCountAggregateInputType = {
   id?: true
   name?: true
-  location?: true
-  price?: true
   description?: true
+  location?: true
+  latitude?: true
+  longitude?: true
+  price?: true
+  images?: true
+  createdAt?: true
   _all?: true
 }
 
@@ -184,11 +208,15 @@ export type StayGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 }
 
 export type StayGroupByOutputType = {
-  id: number
+  id: string
   name: string
-  location: string
-  price: number
   description: string
+  location: string
+  latitude: number
+  longitude: number
+  price: number
+  images: string[]
+  createdAt: Date
   _count: StayCountAggregateOutputType | null
   _avg: StayAvgAggregateOutputType | null
   _sum: StaySumAggregateOutputType | null
@@ -215,41 +243,60 @@ export type StayWhereInput = {
   AND?: Prisma.StayWhereInput | Prisma.StayWhereInput[]
   OR?: Prisma.StayWhereInput[]
   NOT?: Prisma.StayWhereInput | Prisma.StayWhereInput[]
-  id?: Prisma.IntFilter<"Stay"> | number
+  id?: Prisma.StringFilter<"Stay"> | string
   name?: Prisma.StringFilter<"Stay"> | string
-  location?: Prisma.StringFilter<"Stay"> | string
-  price?: Prisma.FloatFilter<"Stay"> | number
   description?: Prisma.StringFilter<"Stay"> | string
+  location?: Prisma.StringFilter<"Stay"> | string
+  latitude?: Prisma.FloatFilter<"Stay"> | number
+  longitude?: Prisma.FloatFilter<"Stay"> | number
+  price?: Prisma.FloatFilter<"Stay"> | number
+  images?: Prisma.StringNullableListFilter<"Stay">
+  createdAt?: Prisma.DateTimeFilter<"Stay"> | Date | string
   reviews?: Prisma.ReviewListRelationFilter
+  bookings?: Prisma.BookingListRelationFilter
 }
 
 export type StayOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  location?: Prisma.SortOrder
-  price?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  images?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
+  bookings?: Prisma.BookingOrderByRelationAggregateInput
 }
 
 export type StayWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
+  id?: string
   AND?: Prisma.StayWhereInput | Prisma.StayWhereInput[]
   OR?: Prisma.StayWhereInput[]
   NOT?: Prisma.StayWhereInput | Prisma.StayWhereInput[]
   name?: Prisma.StringFilter<"Stay"> | string
-  location?: Prisma.StringFilter<"Stay"> | string
-  price?: Prisma.FloatFilter<"Stay"> | number
   description?: Prisma.StringFilter<"Stay"> | string
+  location?: Prisma.StringFilter<"Stay"> | string
+  latitude?: Prisma.FloatFilter<"Stay"> | number
+  longitude?: Prisma.FloatFilter<"Stay"> | number
+  price?: Prisma.FloatFilter<"Stay"> | number
+  images?: Prisma.StringNullableListFilter<"Stay">
+  createdAt?: Prisma.DateTimeFilter<"Stay"> | Date | string
   reviews?: Prisma.ReviewListRelationFilter
+  bookings?: Prisma.BookingListRelationFilter
 }, "id">
 
 export type StayOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  location?: Prisma.SortOrder
-  price?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  images?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   _count?: Prisma.StayCountOrderByAggregateInput
   _avg?: Prisma.StayAvgOrderByAggregateInput
   _max?: Prisma.StayMaxOrderByAggregateInput
@@ -261,107 +308,170 @@ export type StayScalarWhereWithAggregatesInput = {
   AND?: Prisma.StayScalarWhereWithAggregatesInput | Prisma.StayScalarWhereWithAggregatesInput[]
   OR?: Prisma.StayScalarWhereWithAggregatesInput[]
   NOT?: Prisma.StayScalarWhereWithAggregatesInput | Prisma.StayScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"Stay"> | number
+  id?: Prisma.StringWithAggregatesFilter<"Stay"> | string
   name?: Prisma.StringWithAggregatesFilter<"Stay"> | string
-  location?: Prisma.StringWithAggregatesFilter<"Stay"> | string
-  price?: Prisma.FloatWithAggregatesFilter<"Stay"> | number
   description?: Prisma.StringWithAggregatesFilter<"Stay"> | string
+  location?: Prisma.StringWithAggregatesFilter<"Stay"> | string
+  latitude?: Prisma.FloatWithAggregatesFilter<"Stay"> | number
+  longitude?: Prisma.FloatWithAggregatesFilter<"Stay"> | number
+  price?: Prisma.FloatWithAggregatesFilter<"Stay"> | number
+  images?: Prisma.StringNullableListFilter<"Stay">
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Stay"> | Date | string
 }
 
 export type StayCreateInput = {
+  id?: string
   name: string
-  location: string
-  price: number
   description: string
+  location: string
+  latitude: number
+  longitude: number
+  price: number
+  images?: Prisma.StayCreateimagesInput | string[]
+  createdAt?: Date | string
   reviews?: Prisma.ReviewCreateNestedManyWithoutStayInput
+  bookings?: Prisma.BookingCreateNestedManyWithoutStayInput
 }
 
 export type StayUncheckedCreateInput = {
-  id?: number
+  id?: string
   name: string
-  location: string
-  price: number
   description: string
+  location: string
+  latitude: number
+  longitude: number
+  price: number
+  images?: Prisma.StayCreateimagesInput | string[]
+  createdAt?: Date | string
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutStayInput
+  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutStayInput
 }
 
 export type StayUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  images?: Prisma.StayUpdateimagesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviews?: Prisma.ReviewUpdateManyWithoutStayNestedInput
+  bookings?: Prisma.BookingUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  images?: Prisma.StayUpdateimagesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutStayNestedInput
+  bookings?: Prisma.BookingUncheckedUpdateManyWithoutStayNestedInput
 }
 
 export type StayCreateManyInput = {
-  id?: number
+  id?: string
   name: string
-  location: string
-  price: number
   description: string
+  location: string
+  latitude: number
+  longitude: number
+  price: number
+  images?: Prisma.StayCreateimagesInput | string[]
+  createdAt?: Date | string
 }
 
 export type StayUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  images?: Prisma.StayUpdateimagesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StayUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  images?: Prisma.StayUpdateimagesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type StayCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  location?: Prisma.SortOrder
-  price?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  images?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type StayAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
   price?: Prisma.SortOrder
 }
 
 export type StayMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  location?: Prisma.SortOrder
-  price?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type StayMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  location?: Prisma.SortOrder
-  price?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  location?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type StaySumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
   price?: Prisma.SortOrder
 }
 
 export type StayScalarRelationFilter = {
   is?: Prisma.StayWhereInput
   isNot?: Prisma.StayWhereInput
+}
+
+export type StayCreateimagesInput = {
+  set: string[]
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -376,12 +486,13 @@ export type FloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type StayUpdateimagesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
 }
 
 export type StayCreateNestedOneWithoutReviewsInput = {
@@ -398,19 +509,44 @@ export type StayUpdateOneRequiredWithoutReviewsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StayUpdateToOneWithWhereWithoutReviewsInput, Prisma.StayUpdateWithoutReviewsInput>, Prisma.StayUncheckedUpdateWithoutReviewsInput>
 }
 
+export type StayCreateNestedOneWithoutBookingsInput = {
+  create?: Prisma.XOR<Prisma.StayCreateWithoutBookingsInput, Prisma.StayUncheckedCreateWithoutBookingsInput>
+  connectOrCreate?: Prisma.StayCreateOrConnectWithoutBookingsInput
+  connect?: Prisma.StayWhereUniqueInput
+}
+
+export type StayUpdateOneRequiredWithoutBookingsNestedInput = {
+  create?: Prisma.XOR<Prisma.StayCreateWithoutBookingsInput, Prisma.StayUncheckedCreateWithoutBookingsInput>
+  connectOrCreate?: Prisma.StayCreateOrConnectWithoutBookingsInput
+  upsert?: Prisma.StayUpsertWithoutBookingsInput
+  connect?: Prisma.StayWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StayUpdateToOneWithWhereWithoutBookingsInput, Prisma.StayUpdateWithoutBookingsInput>, Prisma.StayUncheckedUpdateWithoutBookingsInput>
+}
+
 export type StayCreateWithoutReviewsInput = {
+  id?: string
   name: string
-  location: string
-  price: number
   description: string
+  location: string
+  latitude: number
+  longitude: number
+  price: number
+  images?: Prisma.StayCreateimagesInput | string[]
+  createdAt?: Date | string
+  bookings?: Prisma.BookingCreateNestedManyWithoutStayInput
 }
 
 export type StayUncheckedCreateWithoutReviewsInput = {
-  id?: number
+  id?: string
   name: string
-  location: string
-  price: number
   description: string
+  location: string
+  latitude: number
+  longitude: number
+  price: number
+  images?: Prisma.StayCreateimagesInput | string[]
+  createdAt?: Date | string
+  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutStayInput
 }
 
 export type StayCreateOrConnectWithoutReviewsInput = {
@@ -430,18 +566,97 @@ export type StayUpdateToOneWithWhereWithoutReviewsInput = {
 }
 
 export type StayUpdateWithoutReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  images?: Prisma.StayUpdateimagesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bookings?: Prisma.BookingUpdateManyWithoutStayNestedInput
 }
 
 export type StayUncheckedUpdateWithoutReviewsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  location?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  images?: Prisma.StayUpdateimagesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bookings?: Prisma.BookingUncheckedUpdateManyWithoutStayNestedInput
+}
+
+export type StayCreateWithoutBookingsInput = {
+  id?: string
+  name: string
+  description: string
+  location: string
+  latitude: number
+  longitude: number
+  price: number
+  images?: Prisma.StayCreateimagesInput | string[]
+  createdAt?: Date | string
+  reviews?: Prisma.ReviewCreateNestedManyWithoutStayInput
+}
+
+export type StayUncheckedCreateWithoutBookingsInput = {
+  id?: string
+  name: string
+  description: string
+  location: string
+  latitude: number
+  longitude: number
+  price: number
+  images?: Prisma.StayCreateimagesInput | string[]
+  createdAt?: Date | string
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutStayInput
+}
+
+export type StayCreateOrConnectWithoutBookingsInput = {
+  where: Prisma.StayWhereUniqueInput
+  create: Prisma.XOR<Prisma.StayCreateWithoutBookingsInput, Prisma.StayUncheckedCreateWithoutBookingsInput>
+}
+
+export type StayUpsertWithoutBookingsInput = {
+  update: Prisma.XOR<Prisma.StayUpdateWithoutBookingsInput, Prisma.StayUncheckedUpdateWithoutBookingsInput>
+  create: Prisma.XOR<Prisma.StayCreateWithoutBookingsInput, Prisma.StayUncheckedCreateWithoutBookingsInput>
+  where?: Prisma.StayWhereInput
+}
+
+export type StayUpdateToOneWithWhereWithoutBookingsInput = {
+  where?: Prisma.StayWhereInput
+  data: Prisma.XOR<Prisma.StayUpdateWithoutBookingsInput, Prisma.StayUncheckedUpdateWithoutBookingsInput>
+}
+
+export type StayUpdateWithoutBookingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  images?: Prisma.StayUpdateimagesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviews?: Prisma.ReviewUpdateManyWithoutStayNestedInput
+}
+
+export type StayUncheckedUpdateWithoutBookingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  images?: Prisma.StayUpdateimagesInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutStayNestedInput
 }
 
 
@@ -451,10 +666,12 @@ export type StayUncheckedUpdateWithoutReviewsInput = {
 
 export type StayCountOutputType = {
   reviews: number
+  bookings: number
 }
 
 export type StayCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reviews?: boolean | StayCountOutputTypeCountReviewsArgs
+  bookings?: boolean | StayCountOutputTypeCountBookingsArgs
 }
 
 /**
@@ -474,44 +691,69 @@ export type StayCountOutputTypeCountReviewsArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.ReviewWhereInput
 }
 
+/**
+ * StayCountOutputType without action
+ */
+export type StayCountOutputTypeCountBookingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BookingWhereInput
+}
+
 
 export type StaySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  location?: boolean
-  price?: boolean
   description?: boolean
+  location?: boolean
+  latitude?: boolean
+  longitude?: boolean
+  price?: boolean
+  images?: boolean
+  createdAt?: boolean
   reviews?: boolean | Prisma.Stay$reviewsArgs<ExtArgs>
+  bookings?: boolean | Prisma.Stay$bookingsArgs<ExtArgs>
   _count?: boolean | Prisma.StayCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stay"]>
 
 export type StaySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  location?: boolean
-  price?: boolean
   description?: boolean
+  location?: boolean
+  latitude?: boolean
+  longitude?: boolean
+  price?: boolean
+  images?: boolean
+  createdAt?: boolean
 }, ExtArgs["result"]["stay"]>
 
 export type StaySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  location?: boolean
-  price?: boolean
   description?: boolean
+  location?: boolean
+  latitude?: boolean
+  longitude?: boolean
+  price?: boolean
+  images?: boolean
+  createdAt?: boolean
 }, ExtArgs["result"]["stay"]>
 
 export type StaySelectScalar = {
   id?: boolean
   name?: boolean
-  location?: boolean
-  price?: boolean
   description?: boolean
+  location?: boolean
+  latitude?: boolean
+  longitude?: boolean
+  price?: boolean
+  images?: boolean
+  createdAt?: boolean
 }
 
-export type StayOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "location" | "price" | "description", ExtArgs["result"]["stay"]>
+export type StayOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "location" | "latitude" | "longitude" | "price" | "images" | "createdAt", ExtArgs["result"]["stay"]>
 export type StayInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reviews?: boolean | Prisma.Stay$reviewsArgs<ExtArgs>
+  bookings?: boolean | Prisma.Stay$bookingsArgs<ExtArgs>
   _count?: boolean | Prisma.StayCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StayIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -521,13 +763,18 @@ export type $StayPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Stay"
   objects: {
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
+    bookings: Prisma.$BookingPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
+    id: string
     name: string
-    location: string
-    price: number
     description: string
+    location: string
+    latitude: number
+    longitude: number
+    price: number
+    images: string[]
+    createdAt: Date
   }, ExtArgs["result"]["stay"]>
   composites: {}
 }
@@ -923,6 +1170,7 @@ readonly fields: StayFieldRefs;
 export interface Prisma__StayClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   reviews<T extends Prisma.Stay$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Stay$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bookings<T extends Prisma.Stay$bookingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Stay$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -952,11 +1200,15 @@ export interface Prisma__StayClient<T, Null = never, ExtArgs extends runtime.Typ
  * Fields of the Stay model
  */
 export interface StayFieldRefs {
-  readonly id: Prisma.FieldRef<"Stay", 'Int'>
+  readonly id: Prisma.FieldRef<"Stay", 'String'>
   readonly name: Prisma.FieldRef<"Stay", 'String'>
-  readonly location: Prisma.FieldRef<"Stay", 'String'>
-  readonly price: Prisma.FieldRef<"Stay", 'Float'>
   readonly description: Prisma.FieldRef<"Stay", 'String'>
+  readonly location: Prisma.FieldRef<"Stay", 'String'>
+  readonly latitude: Prisma.FieldRef<"Stay", 'Float'>
+  readonly longitude: Prisma.FieldRef<"Stay", 'Float'>
+  readonly price: Prisma.FieldRef<"Stay", 'Float'>
+  readonly images: Prisma.FieldRef<"Stay", 'String[]'>
+  readonly createdAt: Prisma.FieldRef<"Stay", 'DateTime'>
 }
     
 
@@ -1371,6 +1623,30 @@ export type Stay$reviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
+}
+
+/**
+ * Stay.bookings
+ */
+export type Stay$bookingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Booking
+   */
+  select?: Prisma.BookingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Booking
+   */
+  omit?: Prisma.BookingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookingInclude<ExtArgs> | null
+  where?: Prisma.BookingWhereInput
+  orderBy?: Prisma.BookingOrderByWithRelationInput | Prisma.BookingOrderByWithRelationInput[]
+  cursor?: Prisma.BookingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BookingScalarFieldEnum | Prisma.BookingScalarFieldEnum[]
 }
 
 /**

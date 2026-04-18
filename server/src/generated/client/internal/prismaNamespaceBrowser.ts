@@ -52,7 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Stay: 'Stay',
-  Review: 'Review'
+  Review: 'Review',
+  Booking: 'Booking'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -74,9 +75,13 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const StayScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  description: 'description',
   location: 'location',
+  latitude: 'latitude',
+  longitude: 'longitude',
   price: 'price',
-  description: 'description'
+  images: 'images',
+  createdAt: 'createdAt'
 } as const
 
 export type StayScalarFieldEnum = (typeof StayScalarFieldEnum)[keyof typeof StayScalarFieldEnum]
@@ -84,12 +89,29 @@ export type StayScalarFieldEnum = (typeof StayScalarFieldEnum)[keyof typeof Stay
 
 export const ReviewScalarFieldEnum = {
   id: 'id',
-  comment: 'comment',
   rating: 'rating',
-  stayId: 'stayId'
+  comment: 'comment',
+  authorName: 'authorName',
+  stayId: 'stayId',
+  createdAt: 'createdAt'
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
+
+
+export const BookingScalarFieldEnum = {
+  id: 'id',
+  guestName: 'guestName',
+  guestEmail: 'guestEmail',
+  checkIn: 'checkIn',
+  checkOut: 'checkOut',
+  totalPrice: 'totalPrice',
+  status: 'status',
+  stayId: 'stayId',
+  createdAt: 'createdAt'
+} as const
+
+export type BookingScalarFieldEnum = (typeof BookingScalarFieldEnum)[keyof typeof BookingScalarFieldEnum]
 
 
 export const SortOrder = {

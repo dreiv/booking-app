@@ -1,36 +1,29 @@
 import { prisma, pool } from '../src/db';
+import fs from 'fs';
+import path from 'path';
 
 async function main() {
   console.log('🧹 Cleaning database...')
-  await prisma.review.deleteMany({})
-  await prisma.stay.deleteMany({})
+  await prisma.review.deleteMany({});
+  await prisma.booking.deleteMany({});
+  await prisma.stay.deleteMany({});
 
-  console.log('🌱 Seeding database...')
-  const stay1 = await prisma.stay.create({
-    data: {
-      name: 'Transylvania Castle',
-      location: 'Bran, Romania',
-      price: 450.5,
-      description: 'A historic stay with a spooky vibe and great views.',
-      reviews: {
-        create: [
-          { comment: 'Amazing atmosphere, but a bit chilly at night.', rating: 5 },
-          { comment: 'I did not see any ghosts, 4/5.', rating: 4 }
-        ]
-      }
+  console.log('📖 Reading stays_romania.json...');
+  const filePath = path.join(__dirname, 'stays_romania.json');
+  const fileData = fs.readFileSync(filePath, 'utf-8');
+  const stays = JSON.parse(fileData);
+
+  console.log(`🌱 Seeding ${stays.length} properties...`);
+  let count = 0;
+  for (const stayData of stays) {
+    await prisma.stay.create({ data: stayData });
+    count++;
+    if (count % 50 === 0) {
+      console.log(`⏳ Seeded ${count} properties...`);
     }
-  })
+  }
 
-  const stay2 = await prisma.stay.create({
-    data: {
-      name: 'Azure Villa',
-      location: 'Santorini, Greece',
-      price: 890.0,
-      description: 'Luxury villa with a private pool and sunset views.',
-    }
-  })
-
-  console.log(`✅ Seeded ${stay1.name} and ${stay2.name}`)
+  console.log(`✅ Successfully seeded ${stays.length} stays with their reviews!`);
 }
 
 main()
@@ -40,5 +33,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect()
-    await pool.end()
+    await pool?.end()
   })

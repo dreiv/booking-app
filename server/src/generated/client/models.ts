@@ -10,4 +10,5 @@
  */
 export type * from './models/Stay.js'
 export type * from './models/Review.js'
+export type * from './models/Booking.js'
 export type * from './commonInputTypes.js'

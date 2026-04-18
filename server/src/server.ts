@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
 app.get('/api/stays', async (req, res) => {
   try {
     const stays = await prisma.stay.findMany({
+      take: 50,
       include: { reviews: true }
     });
     res.json(stays);

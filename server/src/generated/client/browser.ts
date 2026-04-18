@@ -27,3 +27,8 @@ export type Stay = Prisma.StayModel
  * 
  */
 export type Review = Prisma.ReviewModel
+/**
+ * Model Booking
+ * 
+ */
+export type Booking = Prisma.BookingModel

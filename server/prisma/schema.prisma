@@ -8,18 +8,38 @@ datasource db {
 }
 
 model Stay {
-  id          Int      @id @default(autoincrement())
+  id          String    @id @default(uuid())
   name        String
-  location    String
-  price       Float
   description String
+  location    String
+  latitude    Float
+  longitude   Float
+  price       Float
+  images      String[]
   reviews     Review[]
+  bookings    Booking[]
+  createdAt   DateTime  @default(now())
 }
 
 model Review {
-  id      Int    @id @default(autoincrement())
-  comment String
-  rating  Int
-  stayId  Int
-  stay    Stay   @relation(fields: [stayId], references: [id])
+  id         String   @id @default(uuid())
+  rating     Int // 1 - 5
+  comment    String
+  authorName String
+  stayId     String
+  stay       Stay     @relation(fields: [stayId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model Booking {
+  id         String   @id @default(uuid())
+  guestName  String
+  guestEmail String
+  checkIn    DateTime
+  checkOut   DateTime
+  totalPrice Float
+  status     String   @default("CONFIRMED") //"PENDING", "CONFIRMED"
+  stayId     String
+  stay       Stay     @relation(fields: [stayId], references: [id])
+  createdAt  DateTime @default(now())
 }
