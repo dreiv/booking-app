@@ -7,10 +7,13 @@
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "types": [
+      "node"
+    ]
   },
   "include": [
     "src/**/*",
-    "server.ts"
+    "prisma/seed.ts",
+    "prisma.config.ts"
   ]
 }
