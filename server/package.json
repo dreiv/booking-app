@@ -10,7 +10,7 @@
     "db-seed": "prisma db seed",
     "db-setup": "npm run db-gen && npm run db-migrate && npm run db-seed"
   },
-  "type": "module",
+  "type": "commonjs",
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",

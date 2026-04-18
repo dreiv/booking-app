@@ -9,7 +9,7 @@ async function main() {
   await prisma.stay.deleteMany({});
 
   console.log('📖 Reading stays_romania.json...');
-  const filePath = path.join(__dirname, 'stays_romania.json');
+  const filePath = path.resolve(__dirname, 'stays_romania.json');
   const fileData = fs.readFileSync(filePath, 'utf-8');
   const stays = JSON.parse(fileData);
 
