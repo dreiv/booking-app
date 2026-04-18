@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "start": "node dist/src/server.js",
+    "start": "tsx src/server.ts",
     "db-gen": "prisma generate",
     "db-migrate": "prisma migrate dev",
     "db-seed": "prisma db seed",
