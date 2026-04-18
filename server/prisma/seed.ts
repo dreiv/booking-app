@@ -1,13 +1,11 @@
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma, pool } from '../src/db';
 
 async function main() {
+  console.log('🧹 Cleaning database...')
   await prisma.review.deleteMany({})
   await prisma.stay.deleteMany({})
 
   console.log('🌱 Seeding database...')
-
   const stay1 = await prisma.stay.create({
     data: {
       name: 'Transylvania Castle',
@@ -37,9 +35,10 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error(e)
+    console.error('❌ Seeding failed:', e)
     process.exit(1)
   })
   .finally(async () => {
     await prisma.$disconnect()
+    await pool.end()
   })
