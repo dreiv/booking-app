@@ -7,9 +7,15 @@
     "url": "git+https://github.com/dreiv/booking-app.git"
   },
   "license": "ISC",
+  "scripts": {
+    "dev": "concurrently \"npm --workspace=server run dev\" \"npm --workspace=client run dev\""
+  },
   "workspaces": [
     "client",
     "server",
     "shared"
-  ]
+  ],
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
 }
