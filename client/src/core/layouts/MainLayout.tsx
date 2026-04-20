@@ -11,16 +11,11 @@ export const MainLayout = () => {
           >
             STAY<span className="text-[var(--text-h)]">FINDER</span>
           </Link>
-          <nav className="flex gap-6 text-sm font-medium">
-            <Link
-              to="/"
-              className="hover:text-[var(--accent)] transition-colors"
-            >
-              Find Stays
-            </Link>
+
+          <nav className="flex items-center gap-6">
             <Link
               to="/my-bookings"
-              className="hover:text-[var(--accent)] transition-colors"
+              className="font-bold text-gray-600 hover:text-[var(--accent)] transition-colors flex items-center gap-2"
             >
               My Bookings
             </Link>
