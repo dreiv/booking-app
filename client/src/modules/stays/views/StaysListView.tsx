@@ -18,7 +18,15 @@ export const StaysListView: React.FC = () => {
 
   const updateParams = (newParams: Record<string, string | number>) => {
     const current = Object.fromEntries(searchParams.entries());
-    setSearchParams({ ...current, ...newParams });
+
+    const merged = { ...current, ...newParams };
+    const stringifiedParams: Record<string, string> = {};
+
+    Object.entries(merged).forEach(([key, value]) => {
+      stringifiedParams[key] = String(value);
+    });
+
+    setSearchParams(stringifiedParams);
   };
 
   if (isError)
