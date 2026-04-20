@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 
 import { MainLayout } from "./core/layouts/MainLayout";
 import { NotFoundView } from "./core/views/NotFoundView";
+import { CheckoutView } from "./modules/checkout/views/CheckoutView";
 import { StayDetailsView } from "./modules/stays/views/StayDetailsView";
 import { StaysListView } from "./modules/stays/views/StaysListView";
 
@@ -26,10 +27,7 @@ export const App = () => {
             <Route path="/" element={<StaysListView />} />
 
             <Route path="/stays/:id" element={<StayDetailsView />} />
-            <Route
-              path="/checkout"
-              element={<div>Checkout (Coming Soon)</div>}
-            />
+            <Route path="/checkout/:stayId" element={<CheckoutView />} />
 
             <Route path="*" element={<NotFoundView />} />
           </Route>
