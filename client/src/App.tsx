@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 
 import { MainLayout } from "./core/layouts/MainLayout";
 import { NotFoundView } from "./core/views/NotFoundView";
+import { StayDetailsView } from "./modules/stays/views/StayDetailsView";
 import { StaysListView } from "./modules/stays/views/StaysListView";
 
 const queryClient = new QueryClient({
@@ -24,10 +25,7 @@ export const App = () => {
           <Route element={<MainLayout />}>
             <Route path="/" element={<StaysListView />} />
 
-            <Route
-              path="/stays/:id"
-              element={<div>Stay Details (Coming Soon)</div>}
-            />
+            <Route path="/stays/:id" element={<StayDetailsView />} />
             <Route
               path="/checkout"
               element={<div>Checkout (Coming Soon)</div>}
