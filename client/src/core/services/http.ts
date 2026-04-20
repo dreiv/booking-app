@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_BACKEND_URL || "";
+const BASE_URL = import.meta.env.VITE_API_URL || "";
 
 interface HttpOptions extends RequestInit {
   params?: Record<string, string>;
