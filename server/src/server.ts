@@ -15,9 +15,16 @@ app.use(express.json());
 // Routes
 app.use("/api/stays", stayRoutes);
 app.use("/api/bookings", bookingRoutes);
-
 app.get("/", (req, res) => {
   res.json({ message: "Booking API is live! 🚀" });
+});
+
+app.use((err: any, req: any, res: any, next: any) => {
+  console.error("🔥 Error:", err.stack); // Centralized logging
+  const status = err.status || 500;
+  res.status(status).json({
+    error: err.message || "Internal Server Error",
+  });
 });
 
 app.listen(Number(port), "0.0.0.0", () => {

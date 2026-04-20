@@ -1,10 +1,15 @@
-import { Request, Response } from "express";
+import { Request, Response } from "express"; // Ensure these are from 'express'
 import { prisma } from "../db";
+import { asyncHandler } from "../utils/asyncHandler";
 
-export const createBooking = async (req: Request, res: Response) => {
-  try {
+export const createBooking = asyncHandler(
+  async (req: Request, res: Response) => {
     const { stayId, checkIn, checkOut, guestName, guestEmail, totalPrice } =
       req.body;
+
+    if (!stayId) {
+      return res.status(400).json({ error: "stayId is required" });
+    }
 
     const booking = await prisma.booking.create({
       data: {
@@ -18,14 +23,6 @@ export const createBooking = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(201).json({
-      message: "Booking confirmed!",
-      booking,
-    });
-  } catch (error) {
-    console.error("Booking Error:", error);
-    res
-      .status(400)
-      .json({ error: "Booking failed. Ensure all fields are correct." });
-  }
-};
+    res.status(201).json({ message: "Booking confirmed!", booking });
+  },
+);
