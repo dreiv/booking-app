@@ -1,3 +1,4 @@
+import filter from 'leo-profanity';
 import { z } from 'zod';
 
 export const GetStaysSchema = z.object({
@@ -14,14 +15,21 @@ export const StayIdParamSchema = z.object({
   }),
 });
 
+const validateProfanity = (val: string) => !filter.check(val);
 export const CreateReviewSchema = z.object({
   params: z.object({
     id: z.string().uuid(),
   }),
   body: z.object({
     rating: z.coerce.number().int().min(1).max(5),
-    comment: z.coerce.string().min(3),
-    authorName: z.coerce.string().min(2),
+    comment: z.coerce
+      .string()
+      .min(3)
+      .refine(validateProfanity, { message: 'Comment contains inappropriate language' }),
+    authorName: z.coerce
+      .string()
+      .min(2)
+      .refine(validateProfanity, { message: 'Username contains inappropriate language' }),
   }),
 });
 

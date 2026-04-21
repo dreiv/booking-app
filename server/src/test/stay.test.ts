@@ -68,4 +68,17 @@ describe('Stay API Endpoints', () => {
       data: expect.objectContaining({ stayId: mockStayId, rating: 5 }),
     });
   });
+
+  it('POST /api/stays/:id/reviews should return 400 if comment has profanity', async () => {
+    const badData = {
+      rating: 5,
+      comment: 'This place is shit',
+      authorName: 'Drei',
+    };
+
+    const res = await request(app).post(`/api/stays/${mockStayId}/reviews`).send(badData);
+
+    expect(res.status).toBe(400);
+    expect(res.body.errors[0].message).toContain('inappropriate language');
+  });
 });
