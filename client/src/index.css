@@ -1,43 +1,54 @@
 @import "tailwindcss";
 
+@theme {
+  --color-bg: var(--bg);
+  --color-text: var(--text);
+  --color-text-h: var(--text-h);
+  --color-border: var(--border);
+
+  --color-accent: var(--accent);
+  --color-accent-bg: var(--accent-bg);
+  --color-accent-border: var(--accent-border);
+
+  --duration-normal: var(--normal);
+  --duration-fast: var(--fast);
+  --duration-slow: var(--slow);
+
+  --shadow-soft: var(--shadow);
+  --font-sans: var(--sans);
+}
+
 @layer base {
   :root {
-    /* Main Theme Variables */
-    --bg: #ffffff;
-    --text: #4b5563;
-    --text-h: #111827;
-    --border: #e5e7eb;
+    --bg: #fffbf7;
+    --text: #57534e;
+    --text-h: #292524;
+    --border: #e7e5e4;
 
-    --accent: #aa3bff;
-    --accent-bg: rgba(170, 59, 255, 0.05);
-    --accent-border: rgba(170, 59, 255, 0.2);
+    --accent: #f47121;
+    --accent-bg: rgba(244, 113, 33, 0.08);
+    --accent-border: rgba(244, 113, 33, 0.2);
 
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow: 0 4px 20px -2px rgba(120, 113, 108, 0.1);
 
-    --sans: system-ui, -apple-system, sans-serif;
+    --sans: "Inter", system-ui, sans-serif;
 
-    /* Typography defaults */
+    color-scheme: light dark;
     font-family: var(--sans);
     font-size: 18px;
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--text);
     background-color: var(--bg);
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #111827;
-      --text: #9ca3af;
-      --text-h: #f3f4f6;
-      --border: #374151;
-      --accent: #c084fc;
-    }
-  }
-
-  /* Responsive font-size using Tailwind's approach */
-  @screen lg {
-    :root {
-      font-size: 18px;
+      --bg: #1c1917;
+      --text: #a8a29e;
+      --text-h: #fafaf9;
+      --border: #44403c;
+      --accent: #fb923c;
+      --accent-bg: rgba(251, 146, 60, 0.15);
     }
   }
 
@@ -47,33 +58,35 @@
     }
   }
 
-  /* Global Headings */
+  body {
+    @apply min-h-screen antialiased selection:bg-accent/30;
+  }
+
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    @apply font-semibold text-[var(--text-h)] tracking-tight;
-  }
-
-  h1 {
-    @apply text-4xl lg:text-6xl mb-4;
-  }
-
-  /* Global Reset additions not covered by Preflight */
-  body {
-    @apply min-h-screen antialiased;
+    @apply font-semibold text-text-h tracking-tight;
   }
 }
 
 @layer components {
   .container-root {
-    @apply w-full max-w-[1280px] mx-auto px-4 min-h-[100svh] flex flex-col;
+    @apply w-full max-w-7xl mx-auto px-8 min-h-[100svh] flex flex-col;
   }
 
-  /* You can now use your variables inside Tailwind components */
   .btn-primary {
-    @apply bg-[var(--accent)] text-white px-4 py-2 rounded-lg font-medium transition-opacity hover:opacity-90;
+    transition-duration: var(--normal);
+
+    @apply bg-accent text-white px-7 py-3 rounded-2xl font-semibold shadow-soft
+           transition-all hover:brightness-110 active:scale-95 hover:shadow-lg;
+  }
+
+  .card {
+    transition-duration: var(--fast);
+    @apply bg-white dark:bg-stone-900 border border-border rounded-3xl p-5 shadow-soft
+           transition-all hover:shadow-xl hover:-translate-y-1;
   }
 }
