@@ -14,12 +14,12 @@ describe('Stay API Endpoints', () => {
     const res = await request(app).get('/api/stays?page=2&limit=5');
 
     expect(res.status).toBe(200);
-    expect(res.body.meta.page).toBe('2');
+    expect(res.body.meta.page).toBe(2);
 
     expect(prismaMock.stay.findMany).toHaveBeenCalledWith({
       where: { location: undefined },
       skip: 5,
-      take: '5',
+      take: 5,
       orderBy: { createdAt: 'desc' },
     });
   });

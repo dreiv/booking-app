@@ -5,20 +5,33 @@ import { Request, Response } from 'express';
 
 export const getAllStays = asyncHandler(async (req: Request, res: Response) => {
   const { page, limit, location } = req.query as unknown as GetStaysInput;
-  const skip = (page - 1) * limit;
+
+  const validatedPage = Number(page);
+  const validatedLimit = Number(limit);
+  const skip = (validatedPage - 1) * validatedLimit;
 
   const where = {
     location: location ? { contains: location, mode: 'insensitive' as const } : undefined,
   };
 
   const [stays, totalCount] = await Promise.all([
-    prisma.stay.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' } }),
+    prisma.stay.findMany({
+      where,
+      skip,
+      take: validatedLimit,
+      orderBy: { createdAt: 'desc' },
+    }),
     prisma.stay.count({ where }),
   ]);
 
   res.json({
     data: stays,
-    meta: { totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) },
+    meta: {
+      totalCount,
+      page: validatedPage,
+      limit: validatedLimit,
+      totalPages: Math.ceil(totalCount / validatedLimit),
+    },
   });
 });
 
