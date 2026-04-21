@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
+import { ZodError } from 'zod';
 import bookingRoutes from './routes/bookingRoutes';
 import stayRoutes from './routes/stayRoutes';
 
@@ -23,6 +24,10 @@ interface HttpError extends Error {
 
 // Centralized Error Handling
 app.use((err: HttpError, req: Request, res: Response, _next: NextFunction) => {
+  if (err instanceof ZodError) {
+    return res.status(400).json({ status: 'error', errors: err.issues });
+  }
+
   console.error('🔥 Error:', err.stack);
   const status = err.status || 500;
   res.status(status).json({

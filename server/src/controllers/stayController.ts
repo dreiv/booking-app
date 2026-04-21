@@ -1,38 +1,24 @@
+import { prisma } from '@/db';
+import { CreateReviewInput, GetStaysInput } from '@/schemas/staySchema';
+import { asyncHandler } from '@/utils/asyncHandler';
 import { Request, Response } from 'express';
-import { prisma } from '../db';
-import { asyncHandler } from '../utils/asyncHandler';
 
 export const getAllStays = asyncHandler(async (req: Request, res: Response) => {
-  const page = Math.max(1, Number(req.query.page) || 1);
-  const limit = Math.max(1, Number(req.query.limit) || 10);
+  const { page, limit, location } = req.query as unknown as GetStaysInput;
   const skip = (page - 1) * limit;
-
-  const location = req.query.location as string | undefined;
 
   const where = {
     location: location ? { contains: location, mode: 'insensitive' as const } : undefined,
   };
 
   const [stays, totalCount] = await Promise.all([
-    prisma.stay.findMany({
-      where,
-      skip,
-      take: limit,
-      orderBy: { createdAt: 'desc' },
-    }),
+    prisma.stay.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' } }),
     prisma.stay.count({ where }),
   ]);
 
   res.json({
     data: stays,
-    meta: {
-      totalCount,
-      page,
-      limit,
-      totalPages: Math.ceil(totalCount / limit),
-      hasNextPage: skip + stays.length < totalCount,
-      hasPreviousPage: page > 1,
-    },
+    meta: { totalCount, page, limit, totalPages: Math.ceil(totalCount / limit) },
   });
 });
 
@@ -48,7 +34,6 @@ export const getStayById = asyncHandler(async (req: Request, res: Response) => {
     res.status(404);
     throw new Error('Stay not found');
   }
-
   res.json(stay);
 });
 
@@ -65,13 +50,13 @@ export const getStayReviews = asyncHandler(async (req: Request, res: Response) =
 
 export const createReview = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params as { id: string };
-  const { rating, comment, authorName } = req.body;
+  const { rating, comment, authorName } = req.body as CreateReviewInput['body'];
 
   const newReview = await prisma.review.create({
     data: {
-      rating: Number(rating),
-      comment: String(comment),
-      authorName: String(authorName),
+      rating,
+      comment,
+      authorName,
       stayId: id,
     },
   });

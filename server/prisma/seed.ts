@@ -1,6 +1,6 @@
+import { pool, prisma } from '@/db';
 import fs from 'fs';
 import path from 'path';
-import { pool, prisma } from '../src/db';
 
 async function main() {
   console.log('🧹 Cleaning database...');

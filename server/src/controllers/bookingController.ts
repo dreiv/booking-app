@@ -1,7 +1,7 @@
+import { prisma } from '@/db';
+import { CreateBookingInput } from '@/schemas/bookingSchema';
+import { asyncHandler } from '@/utils/asyncHandler';
 import { Request, Response } from 'express';
-import { prisma } from '../db';
-import { CreateBookingInput } from '../schemas/bookingSchema';
-import { asyncHandler } from '../utils/asyncHandler';
 
 export const createBooking = asyncHandler(async (req: Request, res: Response) => {
   const data = req.body as CreateBookingInput;
