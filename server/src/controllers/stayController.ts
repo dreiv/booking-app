@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { prisma } from "../db";
-import { asyncHandler } from "../utils/asyncHandler";
+import { Request, Response } from 'express';
+import { prisma } from '../db';
+import { asyncHandler } from '../utils/asyncHandler';
 
 export const getAllStays = asyncHandler(async (req: Request, res: Response) => {
   const page = Math.max(1, Number(req.query.page) || 1);
@@ -10,9 +10,7 @@ export const getAllStays = asyncHandler(async (req: Request, res: Response) => {
   const location = req.query.location as string | undefined;
 
   const where = {
-    location: location
-      ? { contains: location, mode: "insensitive" as const }
-      : undefined,
+    location: location ? { contains: location, mode: 'insensitive' as const } : undefined,
   };
 
   const [stays, totalCount] = await Promise.all([
@@ -20,7 +18,7 @@ export const getAllStays = asyncHandler(async (req: Request, res: Response) => {
       where,
       skip,
       take: limit,
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
     }),
     prisma.stay.count({ where }),
   ]);
@@ -48,39 +46,35 @@ export const getStayById = asyncHandler(async (req: Request, res: Response) => {
 
   if (!stay) {
     res.status(404);
-    throw new Error("Stay not found");
+    throw new Error('Stay not found');
   }
 
   res.json(stay);
 });
 
-export const getStayReviews = asyncHandler(
-  async (req: Request, res: Response) => {
-    const { id } = req.params as { id: string };
+export const getStayReviews = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
 
-    const reviews = await prisma.review.findMany({
-      where: { stayId: id },
-      orderBy: { createdAt: "desc" },
-    });
+  const reviews = await prisma.review.findMany({
+    where: { stayId: id },
+    orderBy: { createdAt: 'desc' },
+  });
 
-    res.json(reviews);
-  },
-);
+  res.json(reviews);
+});
 
-export const createReview = asyncHandler(
-  async (req: Request, res: Response) => {
-    const { id } = req.params as { id: string };
-    const { rating, comment, authorName } = req.body;
+export const createReview = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+  const { rating, comment, authorName } = req.body;
 
-    const newReview = await prisma.review.create({
-      data: {
-        rating: Number(rating),
-        comment: String(comment),
-        authorName: String(authorName),
-        stayId: id,
-      },
-    });
+  const newReview = await prisma.review.create({
+    data: {
+      rating: Number(rating),
+      comment: String(comment),
+      authorName: String(authorName),
+      stayId: id,
+    },
+  });
 
-    res.status(201).json(newReview);
-  },
-);
+  res.status(201).json(newReview);
+});
