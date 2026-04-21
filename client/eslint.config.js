@@ -5,7 +5,6 @@ import playwright from 'eslint-plugin-playwright'
 import reactCompiler from 'eslint-plugin-react-compiler'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
-import storybook from 'eslint-plugin-storybook'
 import testingLibrary from 'eslint-plugin-testing-library'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
@@ -26,18 +25,16 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
 
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
+
+    ignores: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}', '**/*.stories.{ts,tsx}'],
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       'react-compiler': reactCompiler,
     },
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      globals: {
-        ...globals.browser,
-      },
+      globals: { ...globals.browser },
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -47,32 +44,34 @@ export default tseslint.config(
   },
 
   {
-    files: ['**/*.test.{ts,tsx}', '**/*.spec.ts'],
+    files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
     plugins: {
       'testing-library': testingLibrary,
       vitest: pluginVitest,
+    },
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...pluginVitest.environments.env.globals,
+      },
     },
     rules: {
       ...testingLibrary.configs.dom.rules,
       ...pluginVitest.configs.recommended.rules,
       'vitest/no-disabled-tests': 'warn',
+
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 
   {
     ...playwright.configs['flat/recommended'],
     files: ['e2e/**/*.{ts,tsx}'],
-    rules: {
-      ...playwright.configs['flat/recommended'].rules,
-      'playwright/no-skipped-test': 'warn',
-    },
   },
 
   {
-    files: ['**/*.stories.ts'],
+    files: ['**/*.stories.{ts,tsx}'],
     rules: {
-      ...storybook.configs['flat/recommended'].rules,
-      'import/no-anonymous-default-export': 'off',
       'storybook/await-interactions': 'error',
     },
   },
