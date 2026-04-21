@@ -19,14 +19,16 @@
 
 @layer base {
   :root {
-    --bg: #fffbf7;
-    --text: #57534e;
-    --text-h: #292524;
-    --border: #e7e5e4;
+    --bg: #fafaf9;
+    --text: #44403c;
+    --text-h: #1c1917;
+    --border: #eaddd7;
+
     --accent: #f47121;
-    --accent-bg: rgba(244, 113, 33, 0.08);
-    --accent-border: rgba(244, 113, 33, 0.2);
-    --shadow: 0 4px 20px -2px rgba(120, 113, 108, 0.1);
+    --accent-bg: rgba(244, 113, 33, 0.05);
+    --accent-border: rgba(244, 113, 33, 0.15);
+
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
     --sans: 'Inter', system-ui, sans-serif;
 
     --normal: 200ms;
@@ -64,6 +66,10 @@
 }
 
 @layer components {
+  .btn-primary {
+    @apply bg-accent shadow-soft cursor-pointer rounded-2xl px-7 py-3 font-semibold text-white transition-all hover:shadow-lg hover:brightness-110 active:scale-[0.98] active:brightness-95 disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
   .layout-container {
     @apply mx-auto w-full max-w-7xl px-6 lg:px-8;
   }
