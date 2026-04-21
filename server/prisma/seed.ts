@@ -1,15 +1,21 @@
-import { prisma, pool } from '../src/db';
 import fs from 'fs';
 import path from 'path';
+import { pool, prisma } from '../src/db';
 
 async function main() {
-  console.log('🧹 Cleaning database...')
+  console.log('🧹 Cleaning database...');
   await prisma.review.deleteMany({});
   await prisma.booking.deleteMany({});
   await prisma.stay.deleteMany({});
 
   console.log('📖 Reading stays_romania.json...');
-  const filePath = path.resolve(__dirname, 'stays_romania.json');
+  const fileName = 'stays_romania.json';
+  const filePath = path.resolve(process.cwd(), 'prisma', fileName);
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`File not found at ${filePath}. Check if the filename matches!`);
+  }
+
   const fileData = fs.readFileSync(filePath, 'utf-8');
   const stays = JSON.parse(fileData);
 
