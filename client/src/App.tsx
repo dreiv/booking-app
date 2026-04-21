@@ -1,13 +1,13 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { BrowserRouter, Route, Routes } from 'react-router'
 
-import { MainLayout } from "./core/layouts/MainLayout";
-import { NotFoundView } from "./core/views/NotFoundView";
+import { MainLayout } from './core/layouts/MainLayout'
+import { NotFoundView } from './core/views/NotFoundView'
 
-import { CheckoutView } from "./modules/bookings/views/CheckoutView";
-import { MyBookingsView } from "./modules/bookings/views/MyBookingsView";
-import { StayDetailsView } from "./modules/stays/views/StayDetailsView";
-import { StaysListView } from "./modules/stays/views/StaysListView";
+import { CheckoutView } from './modules/bookings/views/CheckoutView'
+import { MyBookingsView } from './modules/bookings/views/MyBookingsView'
+import { StayDetailsView } from './modules/stays/views/StayDetailsView'
+import { StaysListView } from './modules/stays/views/StaysListView'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,7 +16,7 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
     },
   },
-});
+})
 
 export const App = () => {
   return (
@@ -35,5 +35,5 @@ export const App = () => {
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
-  );
-};
+  )
+}

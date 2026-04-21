@@ -1,21 +1,18 @@
-import { Link, Outlet } from "react-router";
+import { Link, Outlet } from 'react-router'
 
 export const MainLayout = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b border-[var(--border)] py-4 bg-[var(--bg)] sticky top-0 z-50">
-        <div className="max-w-[1280px] mx-auto px-4 flex justify-between items-center">
-          <Link
-            to="/"
-            className="text-2xl font-bold text-[var(--accent)] tracking-tighter"
-          >
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)] py-4">
+        <div className="mx-auto flex max-w-[1280px] items-center justify-between px-4">
+          <Link to="/" className="text-2xl font-bold tracking-tighter text-[var(--accent)]">
             STAY<span className="text-[var(--text-h)]">FINDER</span>
           </Link>
 
           <nav className="flex items-center gap-6">
             <Link
               to="/my-bookings"
-              className="font-bold text-gray-600 hover:text-[var(--accent)] transition-colors flex items-center gap-2"
+              className="flex items-center gap-2 font-bold text-gray-600 transition-colors hover:text-[var(--accent)]"
             >
               My Bookings
             </Link>
@@ -23,15 +20,15 @@ export const MainLayout = () => {
         </div>
       </header>
 
-      <main className="flex-grow max-w-[1280px] mx-auto w-full px-4">
+      <main className="mx-auto w-full max-w-[1280px] flex-grow px-4">
         <Outlet />
       </main>
 
-      <footer className="border-t border-[var(--border)] py-8 mt-12 bg-[var(--social-bg)]">
-        <div className="max-w-[1280px] mx-auto px-4 text-center text-sm text-[var(--text)]">
+      <footer className="mt-12 border-t border-[var(--border)] bg-[var(--social-bg)] py-8">
+        <div className="mx-auto max-w-[1280px] px-4 text-center text-sm text-[var(--text)]">
           &copy; 2026 StayFinder. Built for the booking challenge.
         </div>
       </footer>
     </div>
-  );
-};
+  )
+}

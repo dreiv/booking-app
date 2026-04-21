@@ -1,29 +1,29 @@
-import { type Stay } from "../stays/models";
+import { type Stay } from '../stays/models'
 
 export interface Booking {
-  id: string;
-  guestName: string;
-  guestEmail: string;
-  checkIn: string;
-  checkOut: string;
-  totalPrice: number;
-  status: string;
-  stayId: string;
-  stay: Stay;
+  id: string
+  guestName: string
+  guestEmail: string
+  checkIn: string
+  checkOut: string
+  totalPrice: number
+  status: string
+  stayId: string
+  stay: Stay
 }
 
 export interface BookingPayload {
-  stayId: string;
-  guestName: string;
-  guestEmail: string;
-  checkIn: string;
-  checkOut: string;
-  totalPrice: number;
+  stayId: string
+  guestName: string
+  guestEmail: string
+  checkIn: string
+  checkOut: string
+  totalPrice: number
 }
 
 export interface BookingResponse {
-  message: string;
+  message: string
   booking: {
-    id: string;
-  };
+    id: string
+  }
 }
