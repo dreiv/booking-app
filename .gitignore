@@ -1,9 +1,18 @@
-# Dependencies
-node_modules/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Production / Builds
-dist/
-build/
+node_modules
+dist
+dist-ssr
+build
+coverage
+playwright-report/
 
 # Environment Variables
 .env
@@ -12,8 +21,16 @@ build/
 .env.test.local
 .env.production.local
 
-# Logs
-npm-debug.log*
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# Editor folders
-.vscode/
+# Custom
+*storybook.log
+storybook-static/
