@@ -12,7 +12,8 @@ dist
 dist-ssr
 build
 coverage
-playwright-report/
+playwright-report
+test-results
 
 # Environment Variables
 .env

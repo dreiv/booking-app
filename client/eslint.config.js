@@ -1,16 +1,25 @@
 import js from '@eslint/js'
 import pluginVitest from '@vitest/eslint-plugin'
 import oxlint from 'eslint-plugin-oxlint'
+import playwright from 'eslint-plugin-playwright'
 import reactCompiler from 'eslint-plugin-react-compiler'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import storybook from 'eslint-plugin-storybook'
+import testingLibrary from 'eslint-plugin-testing-library'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'coverage/**', 'storybook-static/**', 'node_modules/**'],
+    ignores: [
+      'dist/**',
+      'coverage/**',
+      'storybook-static/**',
+      'node_modules/**',
+      'e2e/**',
+      'playwright-report/**',
+    ],
   },
 
   js.configs.recommended,
@@ -24,10 +33,10 @@ export default tseslint.config(
       'react-compiler': reactCompiler,
     },
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       globals: {
         ...globals.browser,
-        ...globals.node,
       },
     },
     rules: {
@@ -38,17 +47,28 @@ export default tseslint.config(
   },
 
   {
-    files: ['**/*.test.tsx', '**/*.spec.ts'],
+    files: ['**/*.test.{ts,tsx}', '**/*.spec.ts'],
     plugins: {
-      'testing-library': testingLibraryPlugin,
-      vitest: vitestPlugin,
+      'testing-library': testingLibrary,
+      vitest: pluginVitest,
     },
     rules: {
-      ...testingLibraryPlugin.configs.dom.rules,
+      ...testingLibrary.configs.dom.rules,
       ...pluginVitest.configs.recommended.rules,
+      'vitest/no-disabled-tests': 'warn',
+    },
+  },
+
+  {
+    ...playwright.configs['flat/recommended'],
+    files: ['e2e/**/*.{ts,tsx}'],
+    rules: {
+      ...playwright.configs['flat/recommended'].rules,
+      'playwright/no-skipped-test': 'warn',
     },
   },
 
   ...storybook.configs['flat/recommended'],
+
   ...oxlint.configs['flat/recommended'], // Oxlint - ALWAYS LAST
 )
