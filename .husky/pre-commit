@@ -1,14 +1,13 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+echo "🔍 Starting monorepo pre-commit checks..."
 
-echo "🔍 Starting pre-commit checks..."
-
-# Check if we are in the root and the client folder exists
+# Check Client
 if [ -d "client" ]; then
-  echo "📂 Found client folder, running checks..."
-  cd client && npx lint-staged
-else
-  # If we are already inside the client folder
-  echo "📍 Already in client (or subfolder), running checks..."
-  npx lint-staged
+  echo "📦 Checking client..."
+  npx lint-staged --cwd client
+fi
+
+# Check Server
+if [ -d "server" ]; then
+  echo "📦 Checking server..."
+  npx lint-staged --cwd server
 fi

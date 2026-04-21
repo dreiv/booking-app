@@ -21,6 +21,7 @@
     "lint:ox": "oxlint . --fix -D correctness",
     "lint:es": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
+    "fix": "npm run format && npm run lint",
     "build-storybook": "storybook build"
   },
   "dependencies": {
