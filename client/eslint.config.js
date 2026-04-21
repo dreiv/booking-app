@@ -68,7 +68,14 @@ export default tseslint.config(
     },
   },
 
-  ...storybook.configs['flat/recommended'],
+  {
+    files: ['**/*.stories.ts'],
+    rules: {
+      ...storybook.configs['flat/recommended'].rules,
+      'import/no-anonymous-default-export': 'off',
+      'storybook/await-interactions': 'error',
+    },
+  },
 
   ...oxlint.configs['flat/recommended'], // Oxlint - ALWAYS LAST
 )
