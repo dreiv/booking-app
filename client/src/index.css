@@ -5,7 +5,6 @@
   --color-text: var(--text);
   --color-text-h: var(--text-h);
   --color-border: var(--border);
-
   --color-accent: var(--accent);
   --color-accent-bg: var(--accent-bg);
   --color-accent-border: var(--accent-border);
@@ -24,14 +23,15 @@
     --text: #57534e;
     --text-h: #292524;
     --border: #e7e5e4;
-
     --accent: #f47121;
     --accent-bg: rgba(244, 113, 33, 0.08);
     --accent-border: rgba(244, 113, 33, 0.2);
-
     --shadow: 0 4px 20px -2px rgba(120, 113, 108, 0.1);
-
     --sans: 'Inter', system-ui, sans-serif;
+
+    --normal: 200ms;
+    --fast: 150ms;
+    --slow: 300ms;
 
     color-scheme: light dark;
     font-family: var(--sans);
@@ -61,30 +61,10 @@
   body {
     @apply selection:bg-accent/30 min-h-screen antialiased;
   }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply text-text-h font-semibold tracking-tight;
-  }
 }
 
 @layer components {
-  .container-root {
-    @apply mx-auto flex min-h-[100svh] w-full max-w-7xl flex-col px-8;
-  }
-
-  .btn-primary {
-    transition-duration: var(--normal);
-
-    @apply bg-accent shadow-soft rounded-2xl px-7 py-3 font-semibold text-white transition-all hover:shadow-lg hover:brightness-110 active:scale-95;
-  }
-
-  .card {
-    transition-duration: var(--fast);
-    @apply border-border shadow-soft rounded-3xl border bg-white p-5 transition-all hover:-translate-y-1 hover:shadow-xl dark:bg-stone-900;
+  .layout-container {
+    @apply mx-auto w-full max-w-7xl px-6 lg:px-8;
   }
 }
