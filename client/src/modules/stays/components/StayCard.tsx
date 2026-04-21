@@ -1,58 +1,56 @@
-import { formatCurrency } from "@/core/utils/formatters";
-import React from "react";
-import { Link } from "react-router";
-import type { Stay } from "../models";
+import { formatCurrency } from '@/core/utils/formatters'
+import React from 'react'
+import { Link } from 'react-router'
+import type { Stay } from '../types'
 
 interface Props {
-  stay: Stay;
+  stay: Stay
 }
 
 export const StayCard: React.FC<Props> = ({ stay }) => {
   return (
     <Link
       to={`/stays/${stay.id}`}
-      className="group flex flex-col border border-[var(--border)] rounded-2xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-[var(--card-bg,transparent)]"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card-bg,transparent)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
     >
       {/* Image Container */}
-      <div className="aspect-[4/3] bg-[var(--code-bg)] overflow-hidden relative">
+      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--code-bg)]">
         {stay.images?.[0] ? (
           <img
             src={stay.images[0]}
             alt={stay.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-[var(--text-muted)]">
+          <div className="flex h-full w-full items-center justify-center text-[var(--text-muted)]">
             No Image
           </div>
         )}
 
-        <div className="absolute top-3 left-3 bg-[var(--bg)]/80 backdrop-blur-sm px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm text-[var(--text)]">
+        <div className="absolute top-3 left-3 rounded-md bg-[var(--bg)]/80 px-2 py-1 text-[10px] font-bold tracking-wider text-[var(--text)] uppercase shadow-sm backdrop-blur-sm">
           Featured
         </div>
       </div>
 
-      <div className="p-5 flex flex-col flex-grow">
+      <div className="flex flex-grow flex-col p-5">
         <div className="mb-4">
-          <h3 className="font-bold text-lg text-[var(--text-h)] leading-tight group-hover:text-[var(--accent)] transition-colors line-clamp-1">
+          <h3 className="line-clamp-1 text-lg leading-tight font-bold text-[var(--text-h)] transition-colors group-hover:text-[var(--accent)]">
             {stay.name}
           </h3>
-          <p className="text-sm text-[var(--text)] opacity-70 mt-1 flex items-center gap-1">
-            <span className="i-lucide-map-pin w-3 h-3" /> {stay.location}
+          <p className="mt-1 flex items-center gap-1 text-sm text-[var(--text)] opacity-70">
+            <span className="i-lucide-map-pin h-3 w-3" /> {stay.location}
           </p>
         </div>
 
-        <div className="mt-auto pt-4 border-t border-[var(--border)] flex justify-between items-center">
+        <div className="mt-auto flex items-center justify-between border-t border-[var(--border)] pt-4">
           <div>
-            <p className="text-[10px] text-[var(--text)] opacity-50 uppercase font-black tracking-widest">
+            <p className="text-[10px] font-black tracking-widest text-[var(--text)] uppercase opacity-50">
               Per Night
             </p>
-            <p className="text-xl font-black text-[var(--accent)]">
-              {formatCurrency(stay.price)}
-            </p>
+            <p className="text-xl font-black text-[var(--accent)]">{formatCurrency(stay.price)}</p>
           </div>
 
-          <div className="bg-[var(--border)] p-2 rounded-lg group-hover:bg-[var(--accent)] group-hover:text-white transition-all text-[var(--text-h)]">
+          <div className="rounded-lg bg-[var(--border)] p-2 text-[var(--text-h)] transition-all group-hover:bg-[var(--accent)] group-hover:text-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -70,5 +68,5 @@ export const StayCard: React.FC<Props> = ({ stay }) => {
         </div>
       </div>
     </Link>
-  );
-};
+  )
+}

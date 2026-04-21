@@ -1,0 +1,13 @@
+echo "🔍 Starting monorepo pre-commit checks..."
+
+# Check Client
+if [ -d "client" ]; then
+  echo "📦 Checking client..."
+  npx lint-staged --cwd client
+fi
+
+# Check Server
+if [ -d "server" ]; then
+  echo "📦 Checking server..."
+  npx lint-staged --cwd server
+fi

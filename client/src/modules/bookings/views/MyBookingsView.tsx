@@ -1,57 +1,48 @@
-import { http } from "@/core/services/http";
-import { formatCurrency, formatDate } from "@/core/utils/formatters";
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
-import type { Booking } from "../models"; // Import the interface
+import { http } from '@/core/services/http'
+import { formatCurrency, formatDate } from '@/core/utils/formatters'
+import { useQuery } from '@tanstack/react-query'
+import React from 'react'
+import type { Booking } from '../types' // Import the interface
 
 export const MyBookingsView: React.FC = () => {
   const { data: allBookings, isLoading } = useQuery<Booking[]>({
-    queryKey: ["bookings"],
-    queryFn: () => http.get("/bookings"),
-  });
+    queryKey: ['bookings'],
+    queryFn: () => http.get('/bookings'),
+  })
 
-  const savedIds: string[] = JSON.parse(
-    localStorage.getItem("my_bookings") || "[]",
-  );
+  const savedIds: string[] = JSON.parse(localStorage.getItem('my_bookings') || '[]')
 
-  const myBookings = allBookings?.filter((b) => savedIds.includes(b.id)) || [];
+  const myBookings = allBookings?.filter((b) => savedIds.includes(b.id)) || []
 
-  if (isLoading)
-    return <div className="p-20 text-center">Loading your trips...</div>;
+  if (isLoading) return <div className="p-20 text-center">Loading your trips...</div>
 
   return (
-    <main className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">My Bookings</h1>
+    <main className="mx-auto max-w-4xl p-6">
+      <h1 className="mb-8 text-3xl font-bold">My Bookings</h1>
 
       {myBookings.length === 0 ? (
-        <div className="text-center py-20 bg-[var(--code-bg)] rounded-3xl border border-[var(--border)]">
-          <p className="text-[var(--text)] opacity-60">
-            You haven't booked any stays yet.
-          </p>
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--code-bg)] py-20 text-center">
+          <p className="text-[var(--text)] opacity-60">You haven't booked any stays yet.</p>
         </div>
       ) : (
         <div className="space-y-4">
           {myBookings.map((booking) => (
             <div
               key={booking.id}
-              className="flex gap-6 p-4 border border-[var(--border)] rounded-2xl bg-[var(--card-bg)] shadow-sm hover:shadow-md transition-shadow"
+              className="flex gap-6 rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-4 shadow-sm transition-shadow hover:shadow-md"
             >
               <img
                 src={booking.stay.images[0]}
-                className="w-32 h-32 object-cover rounded-xl"
+                className="h-32 w-32 rounded-xl object-cover"
                 alt={booking.stay.name}
               />
               <div className="flex-1">
-                <div className="flex justify-between items-start">
+                <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="font-bold text-lg text-[var(--text-h)]">
-                      {booking.stay.name}
-                    </h3>
-                    <p className="text-sm text-[var(--text)] opacity-70">
-                      {booking.stay.location}
-                    </p>
+                    <h3 className="text-lg font-bold text-[var(--text-h)]">{booking.stay.name}</h3>
+                    <p className="text-sm text-[var(--text)] opacity-70">{booking.stay.location}</p>
                   </div>
-                  <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">
+                  <span className="rounded bg-green-100 px-2 py-1 text-xs font-bold text-green-700">
                     {booking.status}
                   </span>
                 </div>
@@ -60,8 +51,7 @@ export const MyBookingsView: React.FC = () => {
                   <div>
                     <p className="text-[var(--text)] opacity-50">Dates</p>
                     <p className="font-medium text-[var(--text-h)]">
-                      {formatDate(booking.checkIn)} -{" "}
-                      {formatDate(booking.checkOut)}
+                      {formatDate(booking.checkIn)} - {formatDate(booking.checkOut)}
                     </p>
                   </div>
                   <div>
@@ -77,5 +67,5 @@ export const MyBookingsView: React.FC = () => {
         </div>
       )}
     </main>
-  );
-};
+  )
+}
