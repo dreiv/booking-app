@@ -1,7 +1,7 @@
 import { formatCurrency } from '@/core/utils/formatters'
 import React from 'react'
 import { Link } from 'react-router'
-import type { Stay } from '../models'
+import type { Stay } from '../types'
 
 interface Props {
   stay: Stay

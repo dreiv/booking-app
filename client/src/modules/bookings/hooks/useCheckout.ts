@@ -1,7 +1,7 @@
 import { http } from '@/core/services/http'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
-import type { BookingPayload, BookingResponse } from '../models'
+import type { BookingPayload, BookingResponse } from '../types'
 
 export const useCheckout = () => {
   const navigate = useNavigate()

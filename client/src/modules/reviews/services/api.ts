@@ -1,5 +1,5 @@
 import { http } from '@/core/services/http'
-import type { Review } from '../models'
+import type { Review } from '../types'
 
 export const reviewsService = {
   getByStayId: (stayId: string) => http.get<Review[]>(`/stays/${stayId}/reviews`),

@@ -1,6 +1,6 @@
 import { formatDate } from '@/core/utils/formatters'
 import React from 'react'
-import { type Review } from '../models'
+import { type Review } from '../types'
 
 interface Props {
   review: Review

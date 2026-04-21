@@ -1,5 +1,5 @@
 import React from 'react'
-import { type Review } from '../models'
+import { type Review } from '../types'
 import { ReviewItem } from './ReviewItem'
 
 interface Props {

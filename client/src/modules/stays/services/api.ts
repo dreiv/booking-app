@@ -1,5 +1,5 @@
 import { http } from '@/core/services/http'
-import type { PaginatedResponse, Stay } from '../models'
+import type { PaginatedResponse, Stay } from '../types'
 
 export interface StaysQueryParams {
   page?: number

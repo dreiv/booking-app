@@ -1,4 +1,4 @@
-import { type Stay } from '../stays/models'
+import { type Stay } from '@/modules/stays/types'
 
 export interface Booking {
   id: string

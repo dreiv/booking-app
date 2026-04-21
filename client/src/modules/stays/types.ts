@@ -1,4 +1,4 @@
-import type { Review } from '@/modules/reviews/models'
+import type { Review } from '@/modules/reviews/types'
 
 export interface Stay {
   id: string

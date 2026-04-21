@@ -2,7 +2,7 @@ import { http } from '@/core/services/http'
 import { formatCurrency, formatDate } from '@/core/utils/formatters'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
-import type { Booking } from '../models' // Import the interface
+import type { Booking } from '../types' // Import the interface
 
 export const MyBookingsView: React.FC = () => {
   const { data: allBookings, isLoading } = useQuery<Booking[]>({
