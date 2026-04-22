@@ -13,7 +13,6 @@ export const StayCard: React.FC<Props> = ({ stay }) => {
       to={`/stays/${stay.id}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card-bg,transparent)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
     >
-      {/* Image Container */}
       <div className="relative aspect-[4/3] overflow-hidden bg-[var(--code-bg)]">
         {stay.images?.[0] ? (
           <img
@@ -26,10 +25,6 @@ export const StayCard: React.FC<Props> = ({ stay }) => {
             No Image
           </div>
         )}
-
-        <div className="absolute top-3 left-3 rounded-md bg-[var(--bg)]/80 px-2 py-1 text-[10px] font-bold tracking-wider text-[var(--text)] uppercase shadow-sm backdrop-blur-sm">
-          Featured
-        </div>
       </div>
 
       <div className="flex flex-grow flex-col p-5">

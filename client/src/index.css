@@ -70,6 +70,14 @@
     @apply bg-accent shadow-soft cursor-pointer rounded-2xl px-7 py-3 font-semibold text-white transition-all hover:shadow-lg hover:brightness-110 active:scale-[0.98] active:brightness-95 disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
   .layout-container {
     @apply mx-auto w-full max-w-7xl px-6 lg:px-8;
   }

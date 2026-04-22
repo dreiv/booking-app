@@ -2,88 +2,112 @@
 
 A full-stack travel booking application built for speed, type-safety, and seamless user experience. Discover unique stays, read community reviews, and book your next trip in seconds.
 
-## ⚡ Quick Start: Database Setup
+## 🛠️ Monorepo Structure
 
-Before running the application, ensure your PostgreSQL instance is running and your `.env` is configured.
+This project is managed as an NPM Workspace:
 
-```sh
-# 1. Install dependencies
-npm install
+- `client/`: React + Vite + TypeScript (Frontend)
+- `server/`: Node.js + Express + Prisma (Backend)
 
-# 2. Sync database schema and generate Prisma Client
-npx prisma migrate dev
+## ⚡ Quick Start
 
-# 3. Populate the database with seed data (Essential)
-npx prisma db seed
+### 1. Environment Setup
+
+You need to define environment variables for both the backend and frontend to communicate.
+
+**Backend (`server/.env`):**
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/booking_db"
+PORT=3000
 ```
 
-## 🚀 Running the App
+**Frontend (`client/.env`):**
 
-The project is organized as a monorepo (or separate folders). Follow these steps to start development:
+```env
+VITE_API_URL=http://localhost:3000/api
+```
+
+### 2. Install & Database Setup
+
+From the **root** directory, run the following to get the monorepo ready:
+
+```sh
+# Install all dependencies for all workspaces
+npm install
+
+# Setup database (Migrate + Seed) via workspace proxy
+npm run db:setup
+```
+
+### 3. Run Development Mode
+
+This command starts both the Express server and the Vite dev server concurrently.
 
 ```sh
 npm run dev
 ```
 
-_Backend runs at `http://localhost:3000` | Frontend runs at `http://localhost:5173`._
+_Backend: `http://localhost:3000` | Frontend: `http://localhost:5173`_
+
+---
 
 ## ⚙️ Tech Stack
 
-**Backend:** [Node.js](https://www.google.com/search?q=https://nodejs.org/), [Express](https://www.google.com/search?q=https://expressjs.com/), [TypeScript](https://www.typescriptlang.org/), [Prisma ORM](https://www.google.com/search?q=https://www.prisma.io/), [Zod](https://www.google.com/search?q=https://zod.dev/)
-**Frontend:** [React](https://www.google.com/search?q=https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/), [Vite](https://vitejs.dev/), [Tailwind CSS](https://www.google.com/search?q=https://tailwindcss.com/)
-**Testing:** [Vitest](https://vitest.dev/), [Supertest](https://www.google.com/search?q=https://github.com/ladjs/supertest)
-**Quality:** [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Husky](https://github.com/typicode/husky)
+**Core:** [Node.js](https://nodejs.org/), [React 19](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/), [Vite](https://vitejs.dev/)
 
-## 🧪 Testing & Quality
+**Data:** [Prisma ORM](https://www.prisma.io/), [PostgreSQL](https://www.postgresql.org/), [Zod](https://zod.dev/), [TanStack Query](https://tanstack.com/query/latest)
 
-We prioritize high-confidence code through automated testing and strict linting.
+**Styling:** [Tailwind CSS 4.0](https://tailwindcss.com/), [Lucide React](https://lucide.dev/)
+
+**Quality:** [Oxlint](https://oxc.rs/) (High-speed linting), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Vitest](https://vitest.dev/)
+
+---
+
+## ✅ Quality Control & CI/CD
+
+We use GitHub Actions to ensure code quality before every deployment.
+
+### Unified Scripts (Root)
 
 ```sh
-# Run all tests (Server)
-npm run test
-
-# Run specific test files with UI
-npx vitest --ui
-
-# Quality Checks
-npm run lint         # Run ESLint
-npm run type-check   # Validate TypeScript types
+npm run fix          # Format code & fix linting errors
+npm run type-check   # Validate TS across all workspaces
+npm run test         # Run Vitest suite (Client & Server)
+npm run build        # Production build for all workspaces
 ```
 
-**Testing Highlights:**
+### CI/CD Pipeline
 
-- **Integration Tests:** Full API flow testing using Supertest and Prisma mocking.
-- **Validation Testing:** Ensuring Zod schemas catch malformed data before hitting the DB.
-- **Utility Testing:** Direct unit tests for high-impact helpers like `asyncHandler`.
+The project uses a **GitHub Actions** workflow that:
+
+1. Validates code style (Prettier/Oxlint).
+2. Runs Type Checks and Unit/Integration tests.
+3. **Automatic Deployment:** Deployment to **Render** is only triggered via "After CI Checks Pass" rule once the suite is green.
+
+---
 
 ## 🏗️ Architecture & Trade-offs
 
 ### Architecture
 
-- **Layered Pattern:** Controllers handle logic, Schemas (Zod) handle validation, and the Prisma layer handles data persistence.
-- **Singleton DB Client:** Implemented a `PrismaClient` singleton to prevent connection exhaustion during hot-reloads.
-- **Centralized Error Handling:** A global middleware catches all errors, providing consistent JSON responses for both validation and server-side failures.
+- **Workspace References:** Uses TypeScript Project References for strict boundary checking between Client and Server.
+- **Oxlint Integration:** Replaced/Supplemented standard ESLint rules with Oxlint for near-instant linting performance in the dev loop.
+- **Unified Error Handling:** Global middleware in Express ensures all API errors (including Zod validation) follow a consistent RFC-style JSON structure.
 
 ### Trade-offs
 
-- **Mocked Payments:** For the short project scope, the checkout flow confirms availability and creates a record in the DB but mocks the 3rd-party payment gateway.
-- **Local State vs. Global:** Used React Context/Hooks for stay filtering to keep the bundle light, rather than introducing Redux for a mid-sized scope.
-- **Prisma Adapters:** Used the new `@prisma/adapter-pg` for better performance and future-proofing with serverless environments.
+- **Shared Workspace:** Opted for a shared folder for Zod schemas to ensure "Single Source of Truth" for types between Frontend and Backend.
+- **Manual DB Seed:** Chose a robust seeding script over a heavy SQL dump to ensure the database remains platform-agnostic.
+
+---
 
 ## 🤖 LLM Usage Disclosure
 
-This project utilized **AI** as a collaborative partner.
+This project utilized **AI** as a technical collaborator.
 
-- **Usage:** Brainstorming the singleton pattern for Prisma, refining Zod schema coercions, and generating boilerplate for Vitest integration tests.
-- **Prompts:** _"How can I fix 'any' types in an Express asyncHandler?"_, _"Write a Supertest for a paginated GET endpoint."_
-- **Guardrails:** All AI-generated code was manually reviewed for type-safety and integrated into a custom architectural pattern to ensure consistency.
-
-## 🔮 What's Next? (If I had more time)
-
-1.  **Real-time Map View:** Integrate Leaflet or Google Maps to show stay locations dynamically.
-2.  **Authentication:** Implement JWT-based auth or Clerk for user profiles and "Saved Stays."
-3.  **Optimistic UI:** Use TanStack Query to update reviews instantly before the server confirms.
-4.  **Image Optimization:** Integrate Cloudinary for responsive images and faster LCP (Largest Contentful Paint).
+- **Usage:** Optimizing the Monorepo `tsconfig` project references, debugging CI/CD pipeline timeouts, and refining the Vite-Tailwind v4 integration.
+- **Guardrails:** All configurations were manually tested. AI was used to explain _why_ TypeScript errors occurred in the workspace graph, not just to provide a "blind fix."
 
 ---
 
@@ -93,4 +117,4 @@ This project utilized **AI** as a collaborative partner.
 
 ### 🌐 Deployment
 
-[StayEasy](https://booking-app-frontend-g5xa.onrender.com/)
+[Live App on Render](https://booking-app-frontend-g5xa.onrender.com/)

@@ -6,7 +6,6 @@ export const useStays = (params: StaysQueryParams = {}) => {
     queryKey: ['stays', params],
     queryFn: () => staysService.getAll(params),
     staleTime: 5 * 60 * 1000,
-    // v5 pattern for smooth pagination transitions
     placeholderData: (previousData) => previousData,
   })
 }
