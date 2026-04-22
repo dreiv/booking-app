@@ -6,8 +6,8 @@ import { Request, Response } from 'express';
 export const getAllStays = asyncHandler(async (req: Request, res: Response) => {
   const { page, limit, location } = req.query as unknown as GetStaysInput;
 
-  const validatedPage = Number(page);
-  const validatedLimit = Number(limit);
+  const validatedPage = Number(page) || 1;
+  const validatedLimit = Number(limit) || 9;
   const skip = (validatedPage - 1) * validatedLimit;
 
   const where = {
@@ -24,13 +24,17 @@ export const getAllStays = asyncHandler(async (req: Request, res: Response) => {
     prisma.stay.count({ where }),
   ]);
 
+  const totalPages = Math.ceil(totalCount / validatedLimit);
+
   res.json({
     data: stays,
     meta: {
       totalCount,
       page: validatedPage,
       limit: validatedLimit,
-      totalPages: Math.ceil(totalCount / validatedLimit),
+      totalPages,
+      hasNextPage: validatedPage < totalPages,
+      hasPrevPage: validatedPage > 1,
     },
   });
 });
