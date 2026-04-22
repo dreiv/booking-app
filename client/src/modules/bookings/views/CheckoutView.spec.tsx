@@ -83,7 +83,13 @@ describe('CheckoutView', () => {
 
   it('disables button when mutation is pending', () => {
     vi.mocked(useStayDetails).mockReturnValue({
-      data: { id: '1', name: 'Test', price: 100, images: [''], location: 'Loc' },
+      data: {
+        id: '1',
+        name: 'Test',
+        price: 100,
+        images: ['test-image.jpg'],
+        location: 'Loc',
+      },
       isLoading: false,
     } as any)
 
