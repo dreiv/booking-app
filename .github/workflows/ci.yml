@@ -26,6 +26,8 @@ jobs:
 
       - name: Generate Prisma Client 💎
         run: npm run db:gen
+        env:
+          DATABASE_URL: postgresql://johndoe:randompassword@localhost:5432/mydb
 
       - name: Lint ✅
         run: npm run lint
