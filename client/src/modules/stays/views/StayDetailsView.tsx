@@ -1,4 +1,5 @@
 import { formatCurrency } from '@/core/utils/formatters'
+import { ArrowLeft, MapPin } from 'lucide-react'
 import React from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useStayDetails } from '../hooks/useStayDetails'
@@ -23,16 +24,17 @@ export const StayDetailsView: React.FC = () => {
       <nav className="mb-6">
         <Link
           to="/"
-          className="flex items-center gap-1 text-sm font-medium text-[var(--accent)] hover:underline"
+          className="flex items-center gap-2 text-sm font-bold text-[var(--accent)] hover:underline"
         >
-          ← Back to all stays
+          <ArrowLeft size={18} strokeWidth={2.5} />
+          Back to all stays
         </Link>
       </nav>
 
       <header className="mb-6">
         <h1 className="mb-2 text-3xl font-black text-[var(--text-h)]">{stay.name}</h1>
         <p className="flex items-center gap-2 text-[var(--text)] opacity-70">
-          <span className="i-lucide-map-pin h-4 w-4" /> {stay.location}
+          <MapPin size={16} /> {stay.location}
         </p>
       </header>
 

@@ -20,7 +20,8 @@ describe('StaySearch', () => {
       </MemoryRouter>,
     )
 
-    const input = screen.getByPlaceholderText(/search by city/i)
+    const input = screen.getByPlaceholderText(/search city/i)
+
     const button = screen.getByRole('button', { name: /search/i })
 
     fireEvent.change(input, { target: { value: 'Cluj' } })
@@ -43,5 +44,19 @@ describe('StaySearch', () => {
     fireEvent.click(button)
 
     expect(mockSetSearchParams).toHaveBeenCalledWith({})
+  })
+
+  it('focuses input when CMD+K is pressed', () => {
+    render(
+      <MemoryRouter>
+        <StaySearch />
+      </MemoryRouter>,
+    )
+
+    const input = screen.getByPlaceholderText(/search city/i)
+
+    fireEvent.keyDown(window, { key: 'k', metaKey: true })
+
+    expect(input).toHaveFocus()
   })
 })

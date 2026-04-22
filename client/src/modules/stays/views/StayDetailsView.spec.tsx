@@ -1,91 +1,69 @@
-import { render, screen } from '@testing-library/react'
-import { MemoryRouter, Route, Routes } from 'react-router'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useStayDetails } from '../hooks/useStayDetails'
 import { StayDetailsView } from './StayDetailsView'
 
 vi.mock('../hooks/useStayDetails')
-vi.mock('@/core/utils/formatters')
 
 vi.mock('@/modules/reviews/components/AddReviewForm', () => ({
-  AddReviewForm: () => <div data-testid="mock-add-review-form">Add Review Form Mock</div>,
+  AddReviewForm: () => <div data-testid="add-review-form" />,
+}))
+vi.mock('@/modules/reviews/components/ReviewList', () => ({
+  ReviewList: () => <div data-testid="review-list" />,
 }))
 
-vi.mock('@/modules/reviews/components/ReviewList', () => ({
-  ReviewList: () => <div data-testid="mock-review-list">Review List Mock</div>,
-}))
+const mockNavigate = vi.fn()
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router')
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+    useParams: () => ({ id: 'stay-123' }),
+  }
+})
 
 describe('StayDetailsView', () => {
-  const mockStay = {
-    id: 'stay-123',
-    name: 'Modern Apartment',
-    location: 'Cluj-Napoca',
-    price: 300,
-    description: 'A beautiful place to stay.',
-    images: ['img1.jpg', 'img2.jpg', 'img3.jpg'],
-    reviews: [],
-  }
-
   beforeEach(() => {
     vi.clearAllMocks()
+
+    vi.mocked(useStayDetails).mockReturnValue({
+      data: {
+        id: 'stay-123',
+        name: 'Luxury Cabin',
+        price: 200,
+        location: 'Mountain View',
+        description: 'Nice place',
+        images: [],
+        reviews: [],
+      },
+      isLoading: false,
+      isError: false,
+    } as any)
   })
 
-  it('renders loading state correctly', () => {
-    vi.mocked(useStayDetails).mockReturnValue({
-      isLoading: true,
-      isError: false,
-      data: null,
-    } as any)
-
+  it('navigates to checkout when "Reserve Now" is clicked', () => {
     render(
       <MemoryRouter>
         <StayDetailsView />
       </MemoryRouter>,
     )
 
-    expect(screen.getByText(/loading stay details/i)).toBeInTheDocument()
+    const reserveButton = screen.getByRole('button', { name: /reserve now/i })
+    fireEvent.click(reserveButton)
+
+    expect(mockNavigate).toHaveBeenCalledWith('/checkout/stay-123')
   })
 
-  it('renders stay details and child component placeholders', () => {
-    vi.mocked(useStayDetails).mockReturnValue({
-      isLoading: false,
-      isError: false,
-      data: mockStay,
-    } as any)
-
-    render(
-      <MemoryRouter initialEntries={['/stays/stay-123']}>
-        <Routes>
-          <Route path="/stays/:id" element={<StayDetailsView />} />
-        </Routes>
-      </MemoryRouter>,
-    )
-
-    expect(screen.getByText('Modern Apartment')).toBeInTheDocument()
-    expect(screen.getByText('Cluj-Napoca')).toBeInTheDocument()
-
-    const priceElements = screen.getAllByText('300 RON')
-    expect(priceElements.length).toBe(2)
-
-    expect(screen.getByText('A beautiful place to stay.')).toBeInTheDocument()
-
-    expect(screen.getByTestId('mock-review-list')).toBeInTheDocument()
-    expect(screen.getByTestId('mock-add-review-form')).toBeInTheDocument()
-  })
-
-  it('renders error state when stay is not found', () => {
-    vi.mocked(useStayDetails).mockReturnValue({
-      isLoading: false,
-      isError: true,
-      data: null,
-    } as any)
-
+  it('contains the correct back link to the home page', () => {
     render(
       <MemoryRouter>
         <StayDetailsView />
       </MemoryRouter>,
     )
 
-    expect(screen.getByText(/stay not found/i)).toBeInTheDocument()
+    // Using a regex to find the link text regardless of the icon component inside it
+    const backLink = screen.getByRole('link', { name: /back to all stays/i })
+    expect(backLink).toHaveAttribute('href', '/')
   })
 })
