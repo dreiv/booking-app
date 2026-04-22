@@ -70,7 +70,7 @@ describe('http utility', () => {
         ok: false,
         status: 500,
         statusText: 'Internal Server Error',
-        json: async () => ({}), // Empty body
+        json: async () => ({}),
       })
 
       await expect(http.get('/test')).rejects.toThrow('HTTP 500: Internal Server Error')

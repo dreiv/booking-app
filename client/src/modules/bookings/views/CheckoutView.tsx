@@ -22,7 +22,7 @@ export const CheckoutView: React.FC = () => {
     mutate({
       ...form,
       stayId: stay.id,
-      totalPrice: stay.price, // Simplify: 1 night
+      totalPrice: stay.price, // Per night
       checkIn: new Date().toISOString(),
       checkOut: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
     })
