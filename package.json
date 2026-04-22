@@ -11,8 +11,14 @@
   "scripts": {
     "dev": "concurrently \"npm --workspace=server run dev\" \"npm --workspace=client run dev\"",
     "lint": "npm run lint --workspaces --if-present",
+    "type-check": "npm run type-check --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md,css}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,css}\"",
+    "fix": "npm run format && npm run lint",
+    "db:setup": "npm --workspace=server run db:setup",
+    "db:gen": "npm --workspace=server run db:gen",
     "prepare": "husky"
   },
   "workspaces": [

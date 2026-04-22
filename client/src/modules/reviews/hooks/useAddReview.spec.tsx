@@ -25,21 +25,16 @@ describe('useAddReview', () => {
     const mockReview = { authorName: 'Andrei', rating: 5, comment: 'Excellent' }
     vi.mocked(http.post).mockResolvedValue({ data: { id: 'new-id', ...mockReview } })
 
-    // Spy on invalidateQueries
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries')
 
     const { result } = renderHook(() => useAddReview(stayId), { wrapper })
 
-    // Trigger the mutation
     result.current.mutate(mockReview)
 
-    // Wait for the mutation to finish
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    // Verify HTTP call
     expect(http.post).toHaveBeenCalledWith(`/stays/${stayId}/reviews`, mockReview)
 
-    // Verify Cache Invalidation
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['stays', stayId],
     })
