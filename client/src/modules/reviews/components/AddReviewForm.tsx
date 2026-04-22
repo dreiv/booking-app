@@ -3,7 +3,7 @@ import { useAddReview } from '../hooks/useAddReview'
 
 export const AddReviewForm: React.FC<{ stayId: string }> = ({ stayId }) => {
   const [form, setForm] = useState({ authorName: '', rating: 5, comment: '' })
-  const { mutate, isPending } = useAddReview(stayId)
+  const { mutate, isPending, error } = useAddReview(stayId)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,7 +17,7 @@ export const AddReviewForm: React.FC<{ stayId: string }> = ({ stayId }) => {
       onSubmit={handleSubmit}
       className="space-y-6 rounded-2xl border border-[var(--border)] bg-white p-8 shadow-sm"
     >
-      <h3 className="text-xl font-bold text-[var(--text-h)] text-gray-700">Leave a review</h3>
+      <h3 className="text-xl font-bold text-gray-700">Leave a review</h3>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="flex flex-col gap-2">
@@ -58,12 +58,20 @@ export const AddReviewForm: React.FC<{ stayId: string }> = ({ stayId }) => {
         />
       </div>
 
-      <button
-        disabled={isPending}
-        className="w-full rounded-xl bg-[var(--accent)] px-8 py-3 font-bold text-white shadow-md shadow-purple-100 transition-all hover:brightness-110 disabled:opacity-50 md:w-auto"
-      >
-        {isPending ? 'Posting...' : 'Post Review'}
-      </button>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center">
+        <button
+          disabled={isPending}
+          className="w-full rounded-xl bg-[var(--accent)] px-8 py-3 font-bold text-white shadow-md shadow-purple-100 transition-all hover:brightness-110 disabled:opacity-50 md:w-auto"
+        >
+          {isPending ? 'Posting...' : 'Post Review'}
+        </button>
+
+        {error && (
+          <p className="text-sm font-bold text-red-500">
+            Could not post review. Please check for inappropriate language and try again.
+          </p>
+        )}
+      </div>
     </form>
   )
 }
