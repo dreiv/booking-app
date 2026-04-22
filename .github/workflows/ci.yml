@@ -36,3 +36,9 @@ jobs:
         run: |
           npm run test
           npm run build
+
+      - name: Trigger Render Deploy 🚀
+        if: github.ref == 'refs/heads/main'
+        run: |
+          curl -f ${{ secrets.RENDER_DEPLOY_HOOK_CLIENT }}
+          curl -f ${{ secrets.RENDER_DEPLOY_HOOK_SERVER }}
