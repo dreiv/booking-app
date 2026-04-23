@@ -26,6 +26,7 @@ export const StayCard: React.FC<Props> = ({ stay, variant = 'default' }) => {
   return (
     <Link
       to={`/stays/${stay.id}`}
+      data-testid="stay-card"
       className={`group flex overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card-bg,transparent)] transition-all duration-500 ${
         isCompact ? 'h-40 flex-row' : 'flex-col'
       } ${

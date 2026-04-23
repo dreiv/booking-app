@@ -13,6 +13,7 @@
     "lint": "npm run lint --workspaces --if-present",
     "type-check": "npm run type-check --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
+    "test:e2e": "npm --workspace=client run test:e2e",
     "build": "npm run build --workspaces --if-present",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,css}\"",

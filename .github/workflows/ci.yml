@@ -32,13 +32,26 @@ jobs:
       - name: Lint ✅
         run: npm run lint
 
-      - name: Type Check & Test 🧪
-        run: |
-          npm run test
-          npm run build
+      - name: Unit & Integration Tests 🧪
+        run: npm run test
 
+      - name: Build App 🏗️
+        run: npm run build
+
+      # --- Playwright Section ---
+      - name: Install Playwright Browsers 🎭
+        run: npx playwright install --with-deps
+
+      - name: Run E2E Tests 🚀
+        run: npm run test:e2e
+        env:
+          # Ensure Playwright knows where the built app/dev server is
+          # or if your config uses a specific base URL
+          CI: true
+
+      # --- Deployment Section ---
       - name: Trigger Render Deploy 🚀
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && success()
         run: |
           curl -f ${{ secrets.RENDER_DEPLOY_HOOK_CLIENT }}
           curl -f ${{ secrets.RENDER_DEPLOY_HOOK_SERVER }}
