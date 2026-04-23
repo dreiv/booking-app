@@ -2,8 +2,8 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { App } from './App'
 
-vi.mock('./modules/stays/views/StaysListView', () => ({
-  StaysListView: () => <div data-testid="stays-list">Stays List Page</div>,
+vi.mock('./modules/stays/views/StaysView', () => ({
+  StaysView: () => <div data-testid="stays-list">Stays Page</div>,
 }))
 
 vi.mock('./modules/stays/views/StayDetailsView', () => ({

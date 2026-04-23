@@ -6,7 +6,7 @@ import { CheckoutView } from './modules/bookings/views/CheckoutView'
 import { MyBookingsView } from './modules/bookings/views/MyBookingsView'
 import { FavoritesView } from './modules/favorites/views/FavoritesView'
 import { StayDetailsView } from './modules/stays/views/StayDetailsView'
-import { StaysListView } from './modules/stays/views/StaysListView'
+import { StaysView } from './modules/stays/views/StaysView'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,7 +21,7 @@ export const App = () => (
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
-          <Route path="/" element={<StaysListView />} />
+          <Route path="/" element={<StaysView />} />
           <Route path="/stays/:id" element={<StayDetailsView />} />
 
           <Route path="/favorites" element={<FavoritesView />} />

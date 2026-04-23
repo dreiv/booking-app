@@ -20,7 +20,7 @@ describe('staysService', () => {
           limit: 10,
           totalPages: 0,
           hasNextPage: false,
-          hasPreviousPage: false,
+          hasPrevPage: false,
         },
       }
 

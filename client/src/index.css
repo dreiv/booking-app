@@ -63,6 +63,62 @@
   body {
     @apply selection:bg-accent/30 min-h-screen antialiased;
   }
+  /* --- Map Clusters --- */
+  .custom-cluster {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--accent) !important;
+    color: white !important;
+    border-radius: 50% !important;
+    font-weight: 900;
+    font-size: 14px;
+    border: 2px solid white !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  /* --- Map Pins --- */
+  .custom-map-pin {
+    background: transparent !important;
+    border: none !important;
+    overflow: visible !important;
+  }
+
+  .custom-map-pin:hover {
+    transform: translateY(-3px) scale(1.1);
+    transition: transform 0.2s ease-out;
+    z-index: 1000 !important;
+  }
+
+  /* --- Leaflet Popup Reset (Crucial) --- */
+  .leaflet-popup-content-wrapper,
+  .leaflet-popup-tip {
+    background: var(--bg-card) !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 12px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .leaflet-popup-content {
+    margin: 0 !important;
+    width: auto !important;
+    line-height: 1 !important;
+  }
+
+  /* Dark Mode Shadow Adjustment */
+  [data-theme='dark'] .leaflet-popup-content-wrapper {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  /* Optional: Close Button */
+  .leaflet-container a.leaflet-popup-close-button {
+    color: var(--text-p) !important;
+    padding: 8px 12px 0 0 !important;
+  }
 }
 
 @layer components {

@@ -5,9 +5,8 @@ import { asyncHandler } from '@/utils/asyncHandler';
 import { Request, Response } from 'express';
 
 export const getStays = asyncHandler(async (req: Request, res: Response) => {
-  const { page, limit, location, ids, minPrice, maxPrice, sort } = GetStaysSchema.shape.query.parse(
-    req.query,
-  );
+  const { page, limit, location, ids, minPrice, maxPrice, sort, nwLat, nwLng, seLat, seLng } =
+    GetStaysSchema.shape.query.parse(req.query);
 
   const skip = (page - 1) * limit;
   const where: Prisma.StayWhereInput = {};
@@ -20,6 +19,11 @@ export const getStays = asyncHandler(async (req: Request, res: Response) => {
 
     if (location) {
       where.location = { contains: location, mode: 'insensitive' };
+    }
+
+    if (nwLat !== undefined && seLat !== undefined && nwLng !== undefined && seLng !== undefined) {
+      where.latitude = { gte: Math.min(nwLat, seLat), lte: Math.max(nwLat, seLat) };
+      where.longitude = { gte: Math.min(nwLng, seLng), lte: Math.max(nwLng, seLng) };
     }
   }
 

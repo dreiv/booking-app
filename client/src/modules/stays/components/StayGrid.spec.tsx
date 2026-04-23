@@ -4,18 +4,29 @@ import type { Stay } from '../types'
 import { StayGrid } from './StayGrid'
 
 vi.mock('./StayCard', () => ({
-  StayCard: ({ stay }: { stay: Stay }) => <div data-testid="mock-stay-card">{stay.name}</div>,
+  StayCard: ({ stay, variant }: { stay: Stay; variant: string }) => (
+    <div data-testid="mock-stay-card">
+      {stay.name} - {variant}
+    </div>
+  ),
 }))
 
 describe('StayGrid', () => {
   const mockStays: Stay[] = [{ id: '1', name: 'Stay One' } as Stay]
 
-  it('renders loading skeletons when loading is true', () => {
-    render(<StayGrid stays={[]} loading={true} />)
-
+  it('renders 6 skeletons for default variant', () => {
+    render(<StayGrid stays={[]} loading={true} variant="default" />)
     const skeletons = screen.getAllByTestId('stay-skeleton')
     expect(skeletons).toHaveLength(6)
-    expect(skeletons[0]).toHaveClass('animate-pulse')
+  })
+
+  it('renders 4 skeletons and list classes for compact variant', () => {
+    render(<StayGrid stays={[]} loading={true} variant="compact" />)
+    const skeletons = screen.getAllByTestId('stay-skeleton')
+    expect(skeletons).toHaveLength(4)
+
+    const container = screen.getByTestId('stay-grid-loading')
+    expect(container).toHaveClass('flex-col')
   })
 
   it('renders the empty message when no stays are provided', () => {
@@ -23,17 +34,14 @@ describe('StayGrid', () => {
     expect(screen.getByText('Empty')).toBeInTheDocument()
   })
 
-  it('renders a list of StayCards when stays are provided', () => {
-    render(<StayGrid stays={mockStays} loading={false} />)
-
-    const cards = screen.getAllByTestId('mock-stay-card')
-    expect(cards).toHaveLength(1)
+  it('passes the variant correctly to StayCard', () => {
+    render(<StayGrid stays={mockStays} variant="compact" />)
+    expect(screen.getByText(/Stay One - compact/i)).toBeInTheDocument()
   })
 
-  it('has the correct grid layout classes', () => {
-    render(<StayGrid stays={mockStays} loading={false} />)
-
+  it('applies grid classes for default view', () => {
+    render(<StayGrid stays={mockStays} variant="default" />)
     const grid = screen.getByTestId('stay-grid')
-    expect(grid).toHaveClass('grid', 'grid-cols-1', 'sm:grid-cols-2', 'lg:grid-cols-3')
+    expect(grid).toHaveClass('grid', 'grid-cols-1', 'lg:grid-cols-3')
   })
 })

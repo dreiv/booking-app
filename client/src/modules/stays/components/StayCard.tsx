@@ -7,10 +7,12 @@ import type { Stay } from '../types'
 
 interface Props {
   stay: Stay
+  variant?: 'default' | 'compact'
 }
 
-export const StayCard: React.FC<Props> = ({ stay }) => {
+export const StayCard: React.FC<Props> = ({ stay, variant = 'default' }) => {
   const navigate = useNavigate()
+  const isCompact = variant === 'compact'
   const hasMultipleImages = stay.images && stay.images.length > 1
   const isBooked = stay._count && stay._count.bookings > 0
 
@@ -24,17 +26,23 @@ export const StayCard: React.FC<Props> = ({ stay }) => {
   return (
     <Link
       to={`/stays/${stay.id}`}
-      className={`group flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card-bg,transparent)] transition-all duration-500 ${
+      className={`group flex overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card-bg,transparent)] transition-all duration-500 ${
+        isCompact ? 'h-40 flex-row' : 'flex-col'
+      } ${
         isBooked
           ? 'opacity-80 grayscale-[0.3]'
-          : 'hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/10'
+          : 'hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-500/10'
       }`}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--border)]">
+      <div
+        className={`relative flex-shrink-0 overflow-hidden bg-[var(--border)] ${
+          isCompact ? 'h-full w-40' : 'aspect-[4/3] w-full'
+        }`}
+      >
         {isBooked && (
-          <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 rounded-full bg-gray-900/80 px-3 py-1.5 text-[10px] font-black tracking-widest text-white uppercase shadow-xl backdrop-blur-md">
-            <CalendarX size={12} strokeWidth={3} />
-            Already Booked
+          <div className="absolute top-2 left-2 z-20 flex items-center gap-1 rounded-full bg-gray-900/80 px-2 py-1 text-[8px] font-black tracking-widest text-white uppercase backdrop-blur-md">
+            <CalendarX size={10} strokeWidth={3} />
+            Booked
           </div>
         )}
 
@@ -43,7 +51,7 @@ export const StayCard: React.FC<Props> = ({ stay }) => {
             <img
               src={stay.images[0]}
               alt={stay.name}
-              className={`h-full w-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110 ${
+              className={`h-full w-full object-cover transition-all duration-700 group-hover:scale-110 ${
                 hasMultipleImages && !isBooked ? 'group-hover:opacity-0' : ''
               }`}
             />
@@ -51,43 +59,45 @@ export const StayCard: React.FC<Props> = ({ stay }) => {
               <img
                 src={stay.images[1]}
                 alt={`${stay.name} alternate view`}
-                className="absolute inset-0 h-full w-full scale-105 object-cover opacity-0 transition-all duration-700 ease-in-out group-hover:scale-110 group-hover:opacity-100"
+                className="absolute inset-0 h-full w-full scale-105 object-cover opacity-0 transition-all duration-700 group-hover:scale-110 group-hover:opacity-100"
               />
             )}
           </>
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-[var(--text-muted)]">
-            No Image Available
+          <div className="flex h-full w-full items-center justify-center text-xs text-[var(--text-muted)]">
+            No Image
           </div>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/20 opacity-40 transition-opacity duration-500 group-hover:opacity-60" />
-
-        <div className="absolute top-3 right-3 z-10">
+        <div className="absolute top-2 right-2 z-10">
           <FavoriteButton
             stayId={stay.id}
-            className="rounded-full bg-white/80 p-2 backdrop-blur-sm transition-transform hover:scale-110 active:scale-90"
-            iconSize={18}
+            className="rounded-full bg-white/90 p-1.5 shadow-sm backdrop-blur-sm transition-transform hover:scale-110"
+            iconSize={14}
           />
         </div>
       </div>
 
-      <div className="flex flex-grow flex-col p-5">
-        <div className="mb-4">
-          <h3 className="text-lg leading-tight font-black text-[var(--text-h)] transition-colors group-hover:text-[var(--accent)]">
+      <div className={`flex flex-grow flex-col ${isCompact ? 'min-w-0 p-3' : 'p-5'}`}>
+        <div className={isCompact ? 'mb-1' : 'mb-4'}>
+          <h3
+            className={`${isCompact ? 'text-sm' : 'text-lg'} leading-tight font-black text-[var(--text-h)] transition-colors group-hover:text-[var(--accent)]`}
+          >
             <span className="line-clamp-2">{stay.name}</span>
           </h3>
 
-          <div className="mt-2 flex items-center justify-between">
-            <p className="flex items-center gap-1.5 text-sm font-medium text-[var(--text)] opacity-60">
-              <MapPin size={14} className="text-[var(--accent)]" />
-              {stay.location}
+          <div className={`flex items-center justify-between ${isCompact ? 'mt-1' : 'mt-2'}`}>
+            <p className="flex items-center gap-1 truncate text-[10px] font-medium text-[var(--text)] opacity-60 sm:text-xs">
+              <MapPin size={isCompact ? 12 : 14} className="shrink-0 text-[var(--accent)]" />
+              <span className="truncate">{stay.location}</span>
             </p>
 
             {stay.rating > 0 && (
-              <div className="flex items-center gap-1">
-                <Star size={14} className="fill-yellow-400 text-yellow-400" />
-                <span className="text-sm font-bold text-[var(--text-h)]">
+              <div className="flex shrink-0 items-center gap-1">
+                <Star size={12} className="fill-yellow-400 text-yellow-400" />
+                <span
+                  className={`${isCompact ? 'text-xs' : 'text-sm'} font-bold text-[var(--text-h)]`}
+                >
                   {stay.rating.toFixed(1)}
                 </span>
               </div>
@@ -95,25 +105,41 @@ export const StayCard: React.FC<Props> = ({ stay }) => {
           </div>
         </div>
 
-        <div className="mt-auto flex items-center justify-between border-t border-[var(--border)] pt-4">
+        <div
+          className={`mt-auto flex items-center justify-between border-t border-[var(--border)] ${isCompact ? 'pt-2' : 'pt-4'}`}
+        >
           <div>
-            <p className="text-[10px] font-bold tracking-widest text-[var(--text)] uppercase opacity-40">
-              Per Night
+            {!isCompact && (
+              <p className="text-[8px] font-bold tracking-widest text-[var(--text)] uppercase opacity-40">
+                Per Night
+              </p>
+            )}
+            <p className={`${isCompact ? 'text-base' : 'text-xl'} font-black text-[var(--accent)]`}>
+              {formatCurrency(stay.price)}
+              {isCompact && <span className="ml-1 text-[10px] font-bold opacity-40">/ night</span>}
             </p>
-            <p className="text-xl font-black text-[var(--accent)]">{formatCurrency(stay.price)}</p>
           </div>
 
           <button
             onClick={handleQuickBook}
             disabled={isBooked}
-            className={`flex h-11 items-center gap-2 rounded-xl px-4 font-bold transition-all ${
+            aria-label={isBooked ? 'Unavailable' : 'Book'}
+            className={`flex items-center justify-center rounded-xl transition-all ${
+              isCompact ? 'h-8 w-8 px-0' : 'h-11 gap-2 px-4'
+            } ${
               isBooked
-                ? 'cursor-not-allowed bg-gray-200 text-gray-500'
-                : 'bg-[var(--accent)] text-white hover:shadow-lg hover:shadow-purple-400/30 hover:brightness-110 active:scale-95'
+                ? 'bg-gray-100 text-gray-400'
+                : 'bg-[var(--accent)] text-white hover:shadow-lg active:scale-95'
             }`}
           >
-            <span className="text-sm">{isBooked ? 'Unavailable' : 'Book'}</span>
-            {!isBooked && <CreditCard size={18} />}
+            {isCompact ? (
+              <CreditCard size={14} />
+            ) : (
+              <>
+                <span className="text-sm">{isBooked ? 'Unavailable' : 'Book'}</span>
+                {!isBooked && <CreditCard size={18} />}
+              </>
+            )}
           </button>
         </div>
       </div>

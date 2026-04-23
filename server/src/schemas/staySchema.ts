@@ -10,6 +10,10 @@ export const GetStaysSchema = z.object({
     minPrice: z.coerce.number().optional(),
     maxPrice: z.coerce.number().optional(),
     sort: z.enum(['price_asc', 'price_desc', 'rating_desc', 'newest']).default('newest'),
+    nwLat: z.coerce.number().optional(),
+    nwLng: z.coerce.number().optional(),
+    seLat: z.coerce.number().optional(),
+    seLng: z.coerce.number().optional(),
   }),
 });
 

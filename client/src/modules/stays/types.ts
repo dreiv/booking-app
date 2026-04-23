@@ -41,4 +41,8 @@ export interface StaysQueryParams {
   page?: number
   limit?: number
   ids?: string[]
+  nwLat?: number
+  nwLng?: number
+  seLat?: number
+  seLng?: number
 }

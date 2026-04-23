@@ -9,6 +9,10 @@ export interface StaysQueryParams {
   minPrice?: number
   maxPrice?: number
   sort?: 'price_asc' | 'price_desc' | 'rating_desc' | 'newest'
+  nwLat?: number
+  nwLng?: number
+  seLat?: number
+  seLng?: number
 }
 
 export const staysService = {
