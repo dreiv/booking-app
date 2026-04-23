@@ -2,9 +2,9 @@ name: CI & Trigger Deploy 🚀
 
 on:
   push:
-    branches: [main]
+    branches: ["*"] # Triggers on every branch push
   pull_request:
-    branches: [main]
+    branches: [main] # Triggers when a PR is opened/updated targeting main
 
 jobs:
   build-and-test:
@@ -38,18 +38,18 @@ jobs:
       - name: Build App 🏗️
         run: npm run build
 
-      # --- Playwright Section ---
+      # --- Heavy E2E Section: Only runs on main ---
       - name: Install Playwright Browsers 🎭
+        if: github.ref == 'refs/heads/main'
         run: npx playwright install --with-deps
 
       - name: Run E2E Tests 🚀
+        if: github.ref == 'refs/heads/main'
         run: npm run test:e2e
         env:
-          # Ensure Playwright knows where the built app/dev server is
-          # or if your config uses a specific base URL
           CI: true
 
-      # --- Deployment Section ---
+      # --- Deployment Section: Only runs on main ---
       - name: Trigger Render Deploy 🚀
         if: github.ref == 'refs/heads/main' && success()
         run: |
