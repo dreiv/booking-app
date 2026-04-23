@@ -9,6 +9,7 @@ export const useAddReview = (stayId: string) => {
       http.post(`/stays/${stayId}/reviews`, newReview),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stays', stayId] })
+      queryClient.invalidateQueries({ queryKey: ['stays'], exact: false })
     },
   })
 }

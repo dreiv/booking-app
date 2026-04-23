@@ -19,8 +19,6 @@ describe('CheckoutView', () => {
     vi.mocked(useCheckout).mockReturnValue({
       mutate: mockMutate,
       isPending: false,
-      isSuccess: false,
-      isError: false,
     } as any)
   })
 
@@ -36,16 +34,18 @@ describe('CheckoutView', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText(/loading booking details/i)).toBeInTheDocument()
+    const spinner = screen.getByTestId('loading-spinner')
+    expect(spinner).toBeInTheDocument()
   })
 
   it('renders stay details and handles form submission', async () => {
     const mockStay = {
       id: '123',
       name: 'Cozy Cabin',
-      location: 'Transylvania',
+      location: 'Transylvania, Romania',
       price: 500,
       images: ['test-image.jpg'],
+      rating: 4.5,
     }
 
     vi.mocked(useStayDetails).mockReturnValue({
@@ -60,10 +60,11 @@ describe('CheckoutView', () => {
     )
 
     expect(screen.getByText('Cozy Cabin')).toBeInTheDocument()
-    expect(screen.getAllByText('500 RON')).toHaveLength(2)
 
-    const nameInput = screen.getByPlaceholderText(/full name/i)
-    const emailInput = screen.getByPlaceholderText(/email address/i)
+    expect(screen.getAllByText(/500 RON/i)).toHaveLength(2)
+
+    const nameInput = screen.getByPlaceholderText(/e.g. John Doe/i)
+    const emailInput = screen.getByPlaceholderText(/john@example.com/i)
     const submitBtn = screen.getByRole('button', { name: /confirm booking/i })
 
     fireEvent.change(nameInput, { target: { value: 'John Doe' } })
@@ -83,13 +84,7 @@ describe('CheckoutView', () => {
 
   it('disables button when mutation is pending', () => {
     vi.mocked(useStayDetails).mockReturnValue({
-      data: {
-        id: '1',
-        name: 'Test',
-        price: 100,
-        images: ['test-image.jpg'],
-        location: 'Loc',
-      },
+      data: { id: '1', price: 100, images: ['img'], location: 'Loc', name: 'Test' },
       isLoading: false,
     } as any)
 

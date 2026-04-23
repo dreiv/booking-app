@@ -1,11 +1,29 @@
-import { http } from '@/core/services/http'
-import { useQuery } from '@tanstack/react-query'
-import type { Booking } from '../types'
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
-export const useBookings = () => {
-  return useQuery<Booking[]>({
-    queryKey: ['bookings'],
-    queryFn: () => http.get('/bookings'),
-    staleTime: 1000 * 60 * 5,
-  })
+interface BookingState {
+  bookedStayIds: string[]
+  addBooking: (id: string) => void
+  clearBookings: () => void
+  isBooked: (id: string) => boolean
 }
+
+export const useBookings = create<BookingState>()(
+  persist(
+    (set, get) => ({
+      bookedStayIds: [],
+
+      addBooking: (id: string) => {
+        const currentIds = get().bookedStayIds
+        if (!currentIds.includes(id)) {
+          set({ bookedStayIds: [...currentIds, id] })
+        }
+      },
+
+      clearBookings: () => set({ bookedStayIds: [] }),
+
+      isBooked: (id: string) => get().bookedStayIds.includes(id),
+    }),
+    { name: 'stay-easy-bookings' },
+  ),
+)

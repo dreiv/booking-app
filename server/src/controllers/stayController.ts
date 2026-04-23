@@ -1,36 +1,67 @@
+import { Prisma } from '@/_generated/client/client';
 import { prisma } from '@/db';
-import { CreateReviewInput, GetStaysInput } from '@/schemas/staySchema';
+import { CreateReviewInput, GetStaysSchema } from '@/schemas/staySchema';
 import { asyncHandler } from '@/utils/asyncHandler';
 import { Request, Response } from 'express';
 
-export const getAllStays = asyncHandler(async (req: Request, res: Response) => {
-  const { page, limit, location } = req.query as unknown as GetStaysInput;
+export const getStays = asyncHandler(async (req: Request, res: Response) => {
+  const { page, limit, location, ids, minPrice, maxPrice, sort } = GetStaysSchema.shape.query.parse(
+    req.query,
+  );
 
-  const validatedPage = Number(page);
-  const validatedLimit = Number(limit);
-  const skip = (validatedPage - 1) * validatedLimit;
+  const skip = (page - 1) * limit;
+  const where: Prisma.StayWhereInput = {};
 
-  const where = {
-    location: location ? { contains: location, mode: 'insensitive' as const } : undefined,
-  };
+  if (ids) {
+    const idArray = Array.isArray(ids) ? ids : [ids];
+    where.id = { in: idArray };
+  } else {
+    where.bookings = { none: {} };
+
+    if (location) {
+      where.location = { contains: location, mode: 'insensitive' };
+    }
+  }
+
+  if (minPrice !== undefined || maxPrice !== undefined) {
+    where.price = {
+      ...(minPrice !== undefined && { gte: minPrice }),
+      ...(maxPrice !== undefined && { lte: maxPrice }),
+    };
+  }
+
+  let orderBy: Prisma.StayOrderByWithRelationInput = { createdAt: 'desc' };
+  if (sort === 'price_asc') orderBy = { price: 'asc' };
+  if (sort === 'price_desc') orderBy = { price: 'desc' };
+  if (sort === 'rating_desc') orderBy = { rating: 'desc' };
 
   const [stays, totalCount] = await Promise.all([
     prisma.stay.findMany({
       where,
       skip,
-      take: validatedLimit,
-      orderBy: { createdAt: 'desc' },
+      take: limit,
+      orderBy,
+      // CRITICAL: Include booking count so frontend knows status
+      include: {
+        _count: {
+          select: { bookings: true },
+        },
+      },
     }),
     prisma.stay.count({ where }),
   ]);
+
+  const totalPages = Math.ceil(totalCount / limit);
 
   res.json({
     data: stays,
     meta: {
       totalCount,
-      page: validatedPage,
-      limit: validatedLimit,
-      totalPages: Math.ceil(totalCount / validatedLimit),
+      page,
+      limit,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1,
     },
   });
 });
@@ -40,13 +71,19 @@ export const getStayById = asyncHandler(async (req: Request, res: Response) => {
 
   const stay = await prisma.stay.findUnique({
     where: { id },
-    include: { reviews: true },
+    include: {
+      reviews: true,
+      _count: {
+        select: { bookings: true },
+      },
+    },
   });
 
   if (!stay) {
     res.status(404);
     throw new Error('Stay not found');
   }
+
   res.json(stay);
 });
 
@@ -65,14 +102,28 @@ export const createReview = asyncHandler(async (req: Request, res: Response) => 
   const { id } = req.params as { id: string };
   const { rating, comment, authorName } = req.body as CreateReviewInput['body'];
 
-  const newReview = await prisma.review.create({
-    data: {
-      rating,
-      comment,
-      authorName,
-      stayId: id,
-    },
+  const result = await prisma.$transaction(async (tx) => {
+    const newReview = await tx.review.create({
+      data: {
+        rating,
+        comment,
+        authorName,
+        stayId: id,
+      },
+    });
+
+    const stats = await tx.review.aggregate({
+      where: { stayId: id },
+      _avg: { rating: true },
+    });
+
+    await tx.stay.update({
+      where: { id },
+      data: { rating: stats._avg.rating || 0 },
+    });
+
+    return newReview;
   });
 
-  res.status(201).json(newReview);
+  res.status(201).json(result);
 });

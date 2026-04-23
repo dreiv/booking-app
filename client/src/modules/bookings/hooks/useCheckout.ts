@@ -1,21 +1,22 @@
 import { http } from '@/core/services/http'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
+import { useBookings } from '../hooks/useBookings'
 import type { BookingPayload, BookingResponse } from '../types'
 
 export const useCheckout = () => {
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { addBooking } = useBookings()
 
   return useMutation<BookingResponse, Error, BookingPayload>({
-    mutationFn: (data: BookingPayload) => http.post('/bookings', data),
+    mutationFn: (bookingData: BookingPayload) =>
+      http.post<BookingResponse>('/bookings', bookingData),
+    onSuccess: (_data, variables) => {
+      addBooking(variables.stayId)
 
-    onSuccess: (data) => {
-      const existing = JSON.parse(localStorage.getItem('my_bookings') || '[]')
-
-      localStorage.setItem('my_bookings', JSON.stringify([...existing, data.booking.id]))
-
-      alert('Booking Successful!')
-      navigate('/my-bookings')
+      queryClient.invalidateQueries({ queryKey: ['stays'] })
+      navigate('/bookings')
     },
   })
 }

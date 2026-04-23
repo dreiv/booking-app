@@ -8,9 +8,13 @@ export interface Stay {
   latitude: number
   longitude: number
   price: number
+  rating: number
   images: string[]
   reviews?: Review[]
   createdAt: string
+  _count?: {
+    bookings: number
+  }
 }
 
 export interface PaginationMeta {
@@ -19,10 +23,22 @@ export interface PaginationMeta {
   limit: number
   totalPages: number
   hasNextPage: boolean
-  hasPreviousPage: boolean
+  hasPrevPage: boolean
 }
 
 export interface PaginatedResponse<T> {
   data: T[]
   meta: PaginationMeta
+}
+
+export type StaySortOption = 'newest' | 'price_asc' | 'price_desc' | 'rating_desc'
+
+export interface StaysQueryParams {
+  location?: string
+  minPrice?: number
+  maxPrice?: number
+  sort?: StaySortOption
+  page?: number
+  limit?: number
+  ids?: string[]
 }
