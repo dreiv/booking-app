@@ -45,7 +45,7 @@ jobs:
 
       - name: Run E2E Tests 🚀
         if: github.ref == 'refs/heads/main'
-        run: npm run test:e2e
+        run: cd client && npm run test:e2e
         env:
           CI: true
 
