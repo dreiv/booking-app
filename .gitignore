@@ -33,6 +33,3 @@ server/src/_generated/
 *.sln
 *.sw?
 
-# Custom
-*storybook.log
-storybook-static/

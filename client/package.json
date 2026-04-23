@@ -5,10 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "storybook": "storybook dev -p 6006",
     "build": "vite build",
     "build:analyze": "ANALYZE=true npm run build",
-    "build:storybook": "storybook build",
     "preview": "vite preview",
     "type-check": "tsc -b",
     "test": "vitest run",
@@ -22,8 +20,7 @@
     "lint:ox": "oxlint . --fix -D correctness",
     "lint:es": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
-    "fix": "npm run format && npm run lint",
-    "build-storybook": "storybook build"
+    "fix": "npm run format && npm run lint"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.99.2",
@@ -41,7 +38,6 @@
     "@eslint/js": "^9.39.4",
     "@playwright/test": "^1.59.1",
     "@rolldown/plugin-babel": "^0.2.2",
-    "@storybook/react-vite": "^10.3.5",
     "@tailwindcss/vite": "^4.2.3",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
@@ -63,7 +59,6 @@
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
-    "eslint-plugin-storybook": "^10.3.5",
     "eslint-plugin-testing-library": "^7.16.2",
     "globals": "^17.4.0",
     "jsdom": "^29.0.2",
@@ -71,7 +66,6 @@
     "oxlint": "^1.61.0",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "storybook": "^10.3.5",
     "tailwindcss": "^4.2.3",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.0",
