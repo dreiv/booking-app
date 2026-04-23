@@ -1,13 +1,30 @@
 const BASE_URL = import.meta.env.VITE_API_URL || ''
 
 interface HttpOptions extends RequestInit {
-  params?: Record<string, string>
+  params?: Record<string, string | number | string[] | number[] | undefined>
 }
 
 async function request<T>(endpoint: string, options: HttpOptions = {}): Promise<T> {
   const { params, headers: customHeaders, ...fetchOptions } = options
 
-  const queryString = params ? `?${new URLSearchParams(params)}` : ''
+  let queryString = ''
+  if (params) {
+    const searchParams = new URLSearchParams()
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === undefined || value === null) return
+
+      if (Array.isArray(value)) {
+        value.forEach((v) => searchParams.append(key, String(v)))
+      } else {
+        searchParams.set(key, String(value))
+      }
+    })
+
+    const qs = searchParams.toString()
+    queryString = qs ? `?${qs}` : ''
+  }
+
   const headers = new Headers({
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -29,7 +46,7 @@ async function request<T>(endpoint: string, options: HttpOptions = {}): Promise<
 }
 
 export const http = {
-  get: <T>(url: string, params?: Record<string, string>, options?: HttpOptions) =>
+  get: <T>(url: string, params?: HttpOptions['params'], options?: Omit<HttpOptions, 'params'>) =>
     request<T>(url, { ...options, method: 'GET', params }),
 
   post: <T>(url: string, data?: unknown, options?: HttpOptions) =>

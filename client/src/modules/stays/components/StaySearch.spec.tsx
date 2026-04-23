@@ -1,49 +1,66 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router'
-import { describe, expect, it, vi } from 'vitest'
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
+import { describe, expect, it } from 'vitest'
 import { StaySearch } from './StaySearch'
 
-const mockSetSearchParams = vi.fn()
-vi.mock('react-router', async () => {
-  const actual = await vi.importActual('react-router')
-  return {
-    ...actual,
-    useSearchParams: () => [new URLSearchParams(), mockSetSearchParams],
-  }
-})
+const LocationDisplay = () => {
+  const location = useLocation()
+  return <div data-testid="location">{location.search}</div>
+}
 
 describe('StaySearch', () => {
-  it('updates search params on submit', () => {
+  it('updates the URL correctly on submit', () => {
     render(
-      <MemoryRouter>
-        <StaySearch />
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <StaySearch />
+                <LocationDisplay />
+              </>
+            }
+          />
+        </Routes>
       </MemoryRouter>,
     )
 
     const input = screen.getByPlaceholderText(/search city/i)
-
+    const minInput = screen.getByPlaceholderText(/min/i)
     const button = screen.getByRole('button', { name: /search/i })
 
-    fireEvent.change(input, { target: { value: 'Cluj' } })
+    fireEvent.change(input, { target: { value: 'Brașov' } })
+    fireEvent.change(minInput, { target: { value: '500' } })
     fireEvent.click(button)
 
-    expect(mockSetSearchParams).toHaveBeenCalledWith({
-      location: 'Cluj',
-      page: '1',
-    })
+    const location = screen.getByTestId('location')
+    expect(location.textContent).toContain('location=Bra%C8%99ov')
+    expect(location.textContent).toContain('minPrice=500')
+    expect(location.textContent).toContain('page=1')
   })
 
-  it('clears params if search is empty', () => {
+  it('only navigates when search is clicked (local state isolation)', () => {
     render(
-      <MemoryRouter>
-        <StaySearch />
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <StaySearch />
+                <LocationDisplay />
+              </>
+            }
+          />
+        </Routes>
       </MemoryRouter>,
     )
 
-    const button = screen.getByRole('button', { name: /search/i })
-    fireEvent.click(button)
+    const input = screen.getByPlaceholderText(/search city/i)
+    fireEvent.change(input, { target: { value: 'Testing' } })
 
-    expect(mockSetSearchParams).toHaveBeenCalledWith({})
+    expect(screen.getByTestId('location').textContent).toBe('')
   })
 
   it('focuses input when CMD+K is pressed', () => {
@@ -54,9 +71,22 @@ describe('StaySearch', () => {
     )
 
     const input = screen.getByPlaceholderText(/search city/i)
-
     fireEvent.keyDown(window, { key: 'k', metaKey: true })
 
     expect(input).toHaveFocus()
+  })
+
+  it('initializes form with existing URL params', () => {
+    render(
+      <MemoryRouter initialEntries={['/?location=Cluj&sort=price_asc']}>
+        <StaySearch />
+      </MemoryRouter>,
+    )
+
+    const input = screen.getByPlaceholderText(/search city/i) as HTMLInputElement
+    const select = screen.getByRole('combobox') as HTMLSelectElement
+
+    expect(input.value).toBe('Cluj')
+    expect(select.value).toBe('price_asc')
   })
 })

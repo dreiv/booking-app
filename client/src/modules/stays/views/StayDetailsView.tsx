@@ -1,10 +1,11 @@
 import { formatCurrency } from '@/core/utils/formatters'
-import { ArrowLeft, MapPin } from 'lucide-react'
+import { ArrowLeft, CalendarX, Info, MapPin } from 'lucide-react'
 import React, { useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { useStayDetails } from '../hooks/useStayDetails'
 
 import { ImageLightbox } from '@/core/components/ImageLightbox'
+import { FavoriteButton } from '@/modules/favorites/components/FavoriteButton'
 import { AddReviewForm } from '@/modules/reviews/components/AddReviewForm'
 import { ReviewList } from '@/modules/reviews/components/ReviewList'
 
@@ -15,18 +16,29 @@ export const StayDetailsView: React.FC = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   if (isLoading)
-    return <div className="animate-pulse p-20 text-center text-xl">Loading stay...</div>
+    return <div className="animate-pulse p-20 text-center text-xl font-medium">Loading stay...</div>
   if (isError || !stay)
     return <div className="p-20 text-center font-bold text-red-500">Stay not found.</div>
 
+  const isBooked = stay._count && stay._count.bookings > 0
   const images = stay.images || []
   const secondaryImages = images.slice(1, 5)
 
   const showNext = () => setLightboxIndex((i) => (i! + 1) % images.length)
   const showPrev = () => setLightboxIndex((i) => (i! - 1 + images.length) % images.length)
 
+  const handleBack = () => {
+    // Navigate -1 goes back in history (stays in Favorites if they came from there)
+    navigate(-1)
+  }
+
+  const handleReserve = () => {
+    if (isBooked) return
+    navigate(`/checkout/${stay.id}`)
+  }
+
   return (
-    <main className="mx-auto max-w-6xl p-4 lg:p-8">
+    <main className={`mx-auto max-w-6xl p-4 lg:p-8 ${isBooked ? 'opacity-90' : ''}`}>
       {lightboxIndex !== null && (
         <ImageLightbox
           images={images}
@@ -38,28 +50,39 @@ export const StayDetailsView: React.FC = () => {
       )}
 
       <nav className="mb-6">
-        <Link
-          to="/"
-          className="flex items-center gap-2 text-sm font-bold text-[var(--accent)] hover:underline"
+        <button
+          onClick={handleBack}
+          className="flex items-center gap-2 text-sm font-bold text-[var(--accent)] transition-all hover:translate-x-[-4px] hover:underline"
         >
           <ArrowLeft size={18} strokeWidth={2.5} />
-          Back to all stays
-        </Link>
+          Back
+        </button>
       </nav>
 
       <header className="mb-6">
-        <h1 className="mb-2 text-3xl font-black text-[var(--text-h)]">{stay.name}</h1>
-        <p className="flex items-center gap-2 text-[var(--text)] opacity-70">
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="flex items-center gap-2 text-3xl font-black text-[var(--text-h)]">
+            {stay.name}
+            <FavoriteButton stayId={stay.id} />
+          </h1>
+          {isBooked && (
+            <span className="flex items-center gap-1.5 rounded-full bg-gray-900 px-3 py-1 text-[10px] font-black tracking-widest text-white uppercase">
+              <CalendarX size={14} /> Already Booked
+            </span>
+          )}
+        </div>
+        <p className="mt-2 flex items-center gap-2 text-[var(--text)] opacity-70">
           <MapPin size={16} /> {stay.location}
         </p>
       </header>
 
-      {/* REFINED GALLERY GRID */}
-      <section className="mb-8 grid grid-cols-1 gap-4 overflow-hidden rounded-3xl shadow-lg md:grid-cols-3">
-        {/* Main Featured Image */}
+      <section
+        className={`mb-8 grid grid-cols-1 gap-4 overflow-hidden rounded-3xl shadow-lg md:grid-cols-3 ${isBooked ? 'grayscale-[0.4]' : ''}`}
+      >
         <div className="h-[30rem] overflow-hidden md:col-span-2">
           <button
             onClick={() => setLightboxIndex(0)}
+            aria-label={`View ${stay.name} gallery`}
             className="h-full w-full cursor-zoom-in focus:outline-none"
           >
             <img
@@ -70,33 +93,22 @@ export const StayDetailsView: React.FC = () => {
           </button>
         </div>
 
-        {/* Adaptive Secondary Grid */}
         <div
-          className={`hidden h-[30rem] gap-4 md:grid ${
-            secondaryImages.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
-          }`}
+          className={`hidden h-[30rem] gap-4 md:grid ${secondaryImages.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}
         >
-          {secondaryImages.map((img, i) => {
-            // If we have exactly 3 secondary images (4 total),
-            // make the last one span both columns to avoid a hole.
-            const isLastOfThree = secondaryImages.length === 3 && i === 2
-
-            return (
-              <button
-                key={i}
-                onClick={() => setLightboxIndex(i + 1)}
-                className={`h-full w-full cursor-zoom-in overflow-hidden focus:outline-none ${
-                  isLastOfThree ? 'col-span-2' : ''
-                }`}
-              >
-                <img
-                  src={img}
-                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
-                  alt="detail"
-                />
-              </button>
-            )
-          })}
+          {secondaryImages.map((img, i) => (
+            <button
+              key={i}
+              onClick={() => setLightboxIndex(i + 1)}
+              className={`h-full w-full cursor-zoom-in overflow-hidden focus:outline-none ${secondaryImages.length === 3 && i === 2 ? 'col-span-2' : ''}`}
+            >
+              <img
+                src={img}
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
+                alt="detail"
+              />
+            </button>
+          ))}
         </div>
       </section>
 
@@ -108,45 +120,40 @@ export const StayDetailsView: React.FC = () => {
               {stay.description}
             </p>
           </section>
-
           <hr className="my-12 border-[var(--border)]" />
-
           <section id="reviews" className="space-y-12">
-            <div>
-              <h2 className="mb-8 text-2xl font-bold text-[var(--text-h)]">Guest Reviews</h2>
-              <ReviewList reviews={stay.reviews} stayId={stay.id} />
-            </div>
-            <div className="max-w-xl rounded-2xl bg-gray-50/50 p-2">
-              <AddReviewForm stayId={stay.id} />
-            </div>
+            <ReviewList reviews={stay.reviews} stayId={stay.id} />
+            <AddReviewForm stayId={stay.id} />
           </section>
         </div>
 
         <aside className="lg:col-span-1">
-          <div className="sticky top-24 rounded-3xl border border-[var(--border)] bg-white p-8 shadow-2xl shadow-purple-100/50">
-            <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2">
-              <span className="text-3xl font-black whitespace-nowrap text-[var(--accent)]">
+          <div className="sticky top-24 rounded-3xl border border-[var(--border)] bg-white p-8 shadow-2xl">
+            <div className="mb-6 flex items-baseline justify-between">
+              <span className="text-3xl font-black text-[var(--accent)]">
                 {formatCurrency(stay.price)}
               </span>
-              <span className="whitespace-nowrap text-[var(--text)] opacity-60">/ night</span>
+              <span className="opacity-60">/ night</span>
             </div>
+
+            {isBooked && (
+              <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-100 bg-amber-50 p-4 text-sm text-amber-800">
+                <Info size={20} className="shrink-0" />
+                <p>This property is currently unavailable for the selected dates.</p>
+              </div>
+            )}
+
             <button
-              onClick={() => navigate(`/checkout/${stay.id}`)}
-              className="w-full rounded-xl bg-[var(--accent)] py-4 text-lg font-bold text-white shadow-lg shadow-purple-200 transition-all hover:brightness-110 active:scale-[0.98]"
+              onClick={handleReserve}
+              disabled={isBooked}
+              className={`w-full rounded-xl py-4 text-lg font-bold text-white transition-all ${
+                isBooked
+                  ? 'pointer-events-none cursor-not-allowed bg-gray-400'
+                  : 'bg-[var(--accent)] hover:brightness-110'
+              }`}
             >
-              Reserve Now
+              {isBooked ? 'Unavailable' : 'Reserve Now'}
             </button>
-            <div className="mt-6 space-y-4">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500 italic underline">Service fee</span>
-                <span>{formatCurrency(0)}</span>
-              </div>
-              <hr className="border-[var(--border)]" />
-              <div className="flex justify-between font-bold">
-                <span>Total</span>
-                <span>{formatCurrency(stay.price)}</span>
-              </div>
-            </div>
           </div>
         </aside>
       </div>

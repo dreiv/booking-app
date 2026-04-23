@@ -8,8 +8,12 @@ vi.mock('@/core/services/http')
 
 describe('useAddReview', () => {
   const stayId = 'stay-123'
+
   const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
   })
 
   const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -21,7 +25,7 @@ describe('useAddReview', () => {
     queryClient.clear()
   })
 
-  it('calls the correct endpoint and invalidates cache on success', async () => {
+  it('calls the correct endpoint and invalidates specific and general caches on success', async () => {
     const mockReview = { authorName: 'Andrei', rating: 5, comment: 'Excellent' }
     vi.mocked(http.post).mockResolvedValue({ data: { id: 'new-id', ...mockReview } })
 
@@ -35,8 +39,15 @@ describe('useAddReview', () => {
 
     expect(http.post).toHaveBeenCalledWith(`/stays/${stayId}/reviews`, mockReview)
 
+    expect(invalidateSpy).toHaveBeenCalledTimes(2)
+
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ['stays', stayId],
+    })
+
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ['stays'],
+      exact: false,
     })
   })
 
@@ -49,5 +60,6 @@ describe('useAddReview', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true))
     expect(result.current.error).toBeDefined()
+    expect(result.current.error?.message).toBe('Network Error')
   })
 })

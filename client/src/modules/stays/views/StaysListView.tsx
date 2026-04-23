@@ -1,21 +1,28 @@
-import { ChevronLeft, ChevronRight, RotateCcw, Search } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import React, { useEffect } from 'react'
 import { useSearchParams } from 'react-router'
-import { StayCard } from '../components/StayCard'
+import { StayGrid } from '../components/StayGrid'
 import { StaySearch } from '../components/StaySearch'
 import { useStays } from '../hooks/useStays'
+import type { StaySortOption } from '../types'
 
 export const StaysListView: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const page = Number(searchParams.get('page')) || 1
   const location = searchParams.get('location') || ''
+  const minPrice = searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : undefined
+  const maxPrice = searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined
+  const sort = (searchParams.get('sort') as StaySortOption) || 'newest'
   const limit = 9
 
   const { data, isLoading, isError, error, isPlaceholderData } = useStays({
     page,
     limit,
     location,
+    minPrice,
+    maxPrice,
+    sort,
   })
 
   useEffect(() => {
@@ -35,10 +42,11 @@ export const StaysListView: React.FC = () => {
   if (isError) {
     return (
       <div className="p-20 text-center">
-        <p className="font-bold text-red-500">Error: {error?.message}</p>
+        <p className="text-xl font-bold text-red-500">Something went wrong</p>
+        <p className="mt-2 text-gray-500">{error?.message}</p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-4 text-[var(--accent)] underline"
+          className="mt-6 rounded-xl bg-gray-900 px-6 py-2 font-bold text-white transition-all hover:bg-gray-800"
         >
           Try again
         </button>
@@ -54,6 +62,7 @@ export const StaysListView: React.FC = () => {
       <StaySearch />
 
       <div
+        data-testid="stays-list-content"
         className={`transition-opacity duration-300 ${
           isPlaceholderData ? 'pointer-events-none opacity-50' : 'opacity-100'
         }`}
@@ -61,53 +70,34 @@ export const StaysListView: React.FC = () => {
         <header className="mb-8 flex flex-col items-start justify-between gap-4 px-4 md:flex-row md:items-center">
           <div>
             <h2 className="text-3xl font-black tracking-tight text-[var(--text-h)]">
-              {location ? `Stays in ${location}` : 'Explore trending stays'}
+              {location ? `Stays in "${location}"` : 'Explore trending stays'}
             </h2>
-            {location && (
+            {(location || minPrice || maxPrice) && (
               <button
                 onClick={handleClearFilters}
                 className="mt-1 flex items-center gap-1 text-sm font-bold text-[var(--accent)] hover:underline"
               >
-                Clear filters
+                Clear all filters
               </button>
             )}
           </div>
 
           {meta && stays.length > 0 && (
             <span className="rounded-full border border-purple-100 bg-purple-50 px-4 py-2 text-sm font-bold text-[var(--accent)]">
-              {stays.length} of {meta.totalCount} results
+              {meta.totalCount} properties found
             </span>
           )}
         </header>
 
-        {isLoading ? (
-          <div className="grid grid-cols-1 gap-8 p-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-80 animate-pulse rounded-3xl bg-gray-100" />
-            ))}
-          </div>
-        ) : stays.length > 0 ? (
-          <div className="grid grid-cols-1 gap-8 p-4 sm:grid-cols-2 lg:grid-cols-3">
-            {stays.map((stay) => (
-              <StayCard key={stay.id} stay={stay} />
-            ))}
-          </div>
-        ) : (
-          <div className="mx-4 rounded-3xl border-2 border-dashed border-gray-200 py-32 text-center">
-            <Search size={48} className="mx-auto mb-4 text-gray-300" />
-            <p className="text-2xl font-bold text-gray-400">No results for "{location}"</p>
-            <p className="mt-2 text-gray-500">
-              Try a different city or browse all available destinations.
-            </p>
-            <button
-              onClick={handleClearFilters}
-              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gray-900 px-6 py-3 font-bold text-white transition-transform hover:bg-gray-800 active:scale-95"
-            >
-              <RotateCcw size={18} />
-              Show all stays
-            </button>
-          </div>
-        )}
+        <StayGrid
+          stays={stays}
+          loading={isLoading}
+          emptyMessage={
+            location
+              ? `We couldn't find any available stays in "${location}".`
+              : 'No stays match your current filters.'
+          }
+        />
 
         {meta && meta.totalPages > 1 && (
           <nav

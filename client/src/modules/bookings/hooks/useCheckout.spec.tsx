@@ -2,6 +2,7 @@ import { http } from '@/core/services/http'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { type BookingPayload } from '../types'
 import { useCheckout } from './useCheckout'
 
 vi.mock('@/core/services/http')
@@ -9,15 +10,15 @@ vi.mock('@/core/services/http')
 const mockNavigate = vi.fn()
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router')
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  }
+  return { ...actual, useNavigate: () => mockNavigate }
 })
 
 const createWrapper = () => {
   const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
   })
   return ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -28,25 +29,32 @@ describe('useCheckout', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     localStorage.clear()
-    vi.stubGlobal('alert', vi.fn())
   })
 
   it('should successfully book and redirect', async () => {
-    const mockResponse = { booking: { id: 'bk-123' } }
-    const payload = { hotelId: '1', dates: { from: 'today', to: 'tomorrow' } }
+    const mockResponse = { message: 'Success', booking: { id: 'bk-123' } }
+
+    const payload: BookingPayload = {
+      stayId: 'stay-1',
+      guestName: 'John Doe',
+      guestEmail: 'john@example.com',
+      checkIn: new Date().toISOString(),
+      checkOut: new Date().toISOString(),
+      totalPrice: 100,
+    }
 
     vi.mocked(http.post).mockResolvedValue(mockResponse)
 
     const { result } = renderHook(() => useCheckout(), { wrapper: createWrapper() })
 
-    result.current.mutate(payload as any)
+    result.current.mutate(payload)
+
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    const stored = JSON.parse(localStorage.getItem('my_bookings') || '[]')
-    expect(stored).toContain('bk-123')
+    const storedData = JSON.parse(localStorage.getItem('stay-easy-bookings') || '{}')
+    expect(storedData.state.bookedStayIds).toContain('stay-1')
 
-    expect(window.alert).toHaveBeenCalledWith('Booking Successful!')
-    expect(mockNavigate).toHaveBeenCalledWith('/my-bookings')
+    expect(mockNavigate).toHaveBeenCalledWith('/bookings')
   })
 
   it('should handle mutation errors', async () => {
@@ -56,11 +64,15 @@ describe('useCheckout', () => {
       wrapper: createWrapper(),
     })
 
-    result.current.mutate({} as any)
+    result.current.mutate({} as BookingPayload)
 
     await waitFor(() => expect(result.current.isError).toBe(true))
 
     expect(mockNavigate).not.toHaveBeenCalled()
-    expect(localStorage.getItem('my_bookings')).toBeNull()
+
+    const storedData = localStorage.getItem('stay-easy-bookings')
+    if (storedData) {
+      expect(JSON.parse(storedData).state.bookedStayIds).toHaveLength(0)
+    }
   })
 })
