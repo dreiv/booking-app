@@ -97,6 +97,7 @@ The project uses a **GitHub Actions** workflow that:
 
 ### Trade-offs
 
+- **Assumptions**: I assumed users are logged in for the checkout flow to keep the scope tight
 - **Shared Workspace:** Opted for a shared folder for Zod schemas to ensure "Single Source of Truth" for types between Frontend and Backend.
 - **Manual DB Seed:** Chose a robust seeding script over a heavy SQL dump to ensure the database remains platform-agnostic.
 
