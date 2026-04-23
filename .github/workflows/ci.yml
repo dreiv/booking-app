@@ -2,9 +2,9 @@ name: CI & Trigger Deploy 🚀
 
 on:
   push:
-    branches: ["*"] # Triggers on every branch push
+    branches: ["*"]
   pull_request:
-    branches: [main] # Triggers when a PR is opened/updated targeting main
+    branches: [main]
 
 jobs:
   build-and-test:
@@ -45,12 +45,11 @@ jobs:
 
       - name: Run E2E Tests 🚀
         if: github.ref == 'refs/heads/main'
-       - name: Run E2E Tests 🚀
         run: |
           cd client
           npx playwright test
         env:
-          VITE_API_URL=http://localhost:3000/api
+          VITE_API_URL: http://localhost:3000/api
 
       # --- Deployment Section: Only runs on main ---
       - name: Trigger Render Deploy 🚀

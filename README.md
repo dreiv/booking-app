@@ -106,7 +106,8 @@ The project uses a **GitHub Actions** workflow that:
 
 This project utilized **AI** as a technical collaborator.
 
-- **Usage:** Optimizing the Monorepo `tsconfig` project references, debugging CI/CD pipeline timeouts, and refining the Vite-Tailwind v4 integration.
+- **Scaffolding & Boilerplate**: I used AI to generate the initial component structures and Tailwind layouts. This allowed me to focus on business logic rather than writing repetitive div structures.
+- **Testing**: I utilized AI to generate unit test suites for the utility functions (price calculations, date formatting) and to provide templates for React Testing Library components.
 - **Guardrails:** All configurations were manually tested. AI was used to explain _why_ TypeScript errors occurred in the workspace graph, not just to provide a "blind fix."
 
 ---
