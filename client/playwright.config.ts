@@ -1,4 +1,9 @@
 import { defineConfig, devices } from '@playwright/test'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export default defineConfig({
   testDir: './e2e',
@@ -30,6 +35,6 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     stdout: 'ignore',
     stderr: 'pipe',
-    cwd: './',
+    cwd: __dirname,
   },
 })
