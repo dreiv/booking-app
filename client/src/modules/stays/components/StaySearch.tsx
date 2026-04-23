@@ -4,15 +4,36 @@ import { useSearchParams } from 'react-router'
 
 export const StaySearch: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-
-  const [formData, setFormData] = useState({
-    location: searchParams.get('location') || '',
-    minPrice: searchParams.get('minPrice') || '',
-    maxPrice: searchParams.get('maxPrice') || '',
-    sort: searchParams.get('sort') || 'newest',
-  })
-
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const [localLocation, setLocalLocation] = useState(searchParams.get('location') || '')
+
+  const minPrice = searchParams.get('minPrice') || ''
+  const maxPrice = searchParams.get('maxPrice') || ''
+  const sort = searchParams.get('sort') || 'newest'
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(searchParams)
+      if (localLocation.trim()) {
+        params.set('location', localLocation.trim())
+      } else {
+        params.delete('location')
+      }
+      params.set('page', '1')
+      setSearchParams(params)
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [localLocation])
+
+  useEffect(() => {
+    const urlLocation = searchParams.get('location') || ''
+    if (urlLocation !== localLocation) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLocalLocation(urlLocation)
+    }
+  }, [searchParams])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -25,22 +46,23 @@ export const StaySearch: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleInstantChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    const params = new URLSearchParams(searchParams)
 
-    const params: Record<string, string> = { page: '1' }
+    if (value) params.set(name, value)
+    else params.delete(name)
 
-    if (formData.location.trim()) params.location = formData.location.trim()
-    if (formData.minPrice) params.minPrice = formData.minPrice
-    if (formData.maxPrice) params.maxPrice = formData.maxPrice
-    if (formData.sort !== 'newest') params.sort = formData.sort
-
+    params.set('page', '1')
     setSearchParams(params)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const params = new URLSearchParams(searchParams)
+    params.set('page', '1')
+    setSearchParams(params)
   }
 
   return (
@@ -59,8 +81,8 @@ export const StaySearch: React.FC = () => {
               type="text"
               placeholder="Search city..."
               className="w-full bg-transparent text-base font-bold text-gray-800 outline-none placeholder:font-medium"
-              value={formData.location}
-              onChange={handleChange}
+              value={localLocation}
+              onChange={(e) => setLocalLocation(e.target.value)}
             />
           </div>
         </div>
@@ -78,8 +100,8 @@ export const StaySearch: React.FC = () => {
                 type="number"
                 placeholder="Min"
                 className="w-full bg-transparent text-sm font-bold text-gray-800 outline-none"
-                value={formData.minPrice}
-                onChange={handleChange}
+                value={minPrice}
+                onChange={handleInstantChange}
               />
               <span className="text-gray-300">-</span>
               <input
@@ -87,8 +109,8 @@ export const StaySearch: React.FC = () => {
                 type="number"
                 placeholder="Max"
                 className="w-full bg-transparent text-sm font-bold text-gray-800 outline-none"
-                value={formData.maxPrice}
-                onChange={handleChange}
+                value={maxPrice}
+                onChange={handleInstantChange}
               />
             </div>
           </div>
@@ -103,8 +125,8 @@ export const StaySearch: React.FC = () => {
             </label>
             <select
               name="sort"
-              value={formData.sort}
-              onChange={handleChange}
+              value={sort}
+              onChange={handleInstantChange}
               className="w-full cursor-pointer appearance-none bg-transparent text-sm font-bold text-gray-800 outline-none"
             >
               <option value="newest">Newest</option>

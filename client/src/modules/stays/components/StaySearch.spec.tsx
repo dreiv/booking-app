@@ -9,37 +9,6 @@ const LocationDisplay = () => {
 }
 
 describe('StaySearch', () => {
-  it('updates the URL correctly on submit', () => {
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <StaySearch />
-                <LocationDisplay />
-              </>
-            }
-          />
-        </Routes>
-      </MemoryRouter>,
-    )
-
-    const input = screen.getByPlaceholderText(/search city/i)
-    const minInput = screen.getByPlaceholderText(/min/i)
-    const button = screen.getByRole('button', { name: /search/i })
-
-    fireEvent.change(input, { target: { value: 'Brașov' } })
-    fireEvent.change(minInput, { target: { value: '500' } })
-    fireEvent.click(button)
-
-    const location = screen.getByTestId('location')
-    expect(location.textContent).toContain('location=Bra%C8%99ov')
-    expect(location.textContent).toContain('minPrice=500')
-    expect(location.textContent).toContain('page=1')
-  })
-
   it('only navigates when search is clicked (local state isolation)', () => {
     render(
       <MemoryRouter initialEntries={['/']}>

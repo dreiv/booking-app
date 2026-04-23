@@ -55,7 +55,7 @@ export const MapContent: React.FC<Props> = ({ stays }) => {
         {stays.map((stay) => (
           <Marker key={stay.id} position={[stay.latitude, stay.longitude]} icon={icon}>
             <Popup>
-              <div className="w-48 overflow-hidden bg-[var(--bg-card)]">
+              <div className="w-48 overflow-hidden bg-black">
                 <Link to={`/stays/${stay.id}`} className="block h-28 w-full overflow-hidden">
                   <img
                     src={stay.images[0]}
